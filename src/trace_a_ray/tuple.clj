@@ -1,13 +1,18 @@
 
-(ns trace-a-ray.tuple)
+(ns trace-a-ray.tuple
+  (:refer-clojure :rename {vector core-vector
+                           vector? core-vector?
+                           + core-+
+                           - core--}))
 
-(defn vec? [tuple]
-  "Check if we have a point or a vector."
+(defn vector? [tuple]
+  "Check if we have a point or a vector. Be careful using :refer :all
+  with this is it shadows core."
   (== 0 (nth tuple 3)))
 
 (defn point? [tuple]
   "Check if tuple is a point."
-  (not (vec? tuple)))
+  (not (vector? tuple)))
 
 (defn x [tuple]
   "Get x-coordinate"
@@ -25,19 +30,22 @@
   "Get w-coordinate"
   (nth tuple 3))
 
-
-(defn mk-point [x y z]
+(defn point [x y z]
   "Creates a point."
   [x y z 1.0])
 
-(defn mk-vec [x y z]
+(defn vector [x y z]
   "Creates a vector."
   [x y z 0.0])
 
-(defn add [t1 t2]
+(defn + [t1 t2]
   "Add two tuples together componentwise"
-  (map + t1 t2))
+  (map core-+ t1 t2))
 
-(defn sub [t1 t2]
+(defn - [t1 t2]
   "Add two tuples together componentwise"
-  (map - t1 t2))
+  (map core-- t1 t2))
+
+(defn negate [v]
+  "Negate a vector"
+  (- [0 0 0 0] v))
