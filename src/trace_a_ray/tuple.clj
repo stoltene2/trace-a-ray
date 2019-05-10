@@ -63,7 +63,18 @@
     ;; I purposefully didn't scale w because it is always 0
     (vector (/ x1 mag) (/ y1 mag) (/ z1 mag))))
 
-
 (defn dot [v1 v2]
   "Compute the dot product of two vectors."
   (apply core-+ (map core-* v1 v2)))
+
+
+(defn cross [v1 v2]
+  "Compute the cross product of two vectors"
+  (let [[ax ay az & rest] v1
+        [bx by bz & rest] v2
+        x (core-- (core-* ay bz) (core-* az by))
+        y (core-- (core-* az bx) (core-* ax bz))
+        z (core-- (core-* ax by) (core-* ay bx))]
+    (vector x y z)))
+
+;; This was really a pain using regular core--. Maybe I need to rethink that.

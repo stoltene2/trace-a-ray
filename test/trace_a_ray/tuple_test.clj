@@ -1,7 +1,8 @@
 
 (ns trace-a-ray.tuple-test
   (:require [clojure.test :refer :all]
-            [trace-a-ray.tuple :as t]))
+            [trace-a-ray.tuple :as t]
+            [clojure.test.check :as tc]))
 
 (def EPSILON 0.0000001)
 
@@ -122,3 +123,19 @@
 
     (is (= (t/dot (t/vector 1 0 0) (t/vector -1 0 0)) -1.0)
         "Vectors are opposite")))
+
+
+;; Clojure dislike: Horrible error messages
+(deftest cross-product
+  (testing "When computing the cross product"
+    (let [a (t/vector 1 2 3)
+          b (t/vector 2 3 4)]
+
+      (is (= (t/cross (t/vector 1 2 3) (t/vector 2 3 4))
+             (t/vector -1 2 -1)))
+
+      (is (= (t/cross b a)
+             (t/vector 1 -2 1))))
+
+    (is (= (t/cross (t/vector 1 0 0) (t/vector 0 1 0))
+           (t/vector 0 0 1)))))
