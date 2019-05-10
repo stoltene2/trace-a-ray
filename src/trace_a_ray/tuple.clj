@@ -57,11 +57,13 @@
   (let [sqr (fn [x] (core-* x x))]
     (Math/sqrt (apply core-+ (map sqr v)))))
 
-(defn normalize [v]
+(defn normalize [[x1 y1 z1 :as v]]
   "Normalize a non-zero vector."
-  (let [mag (magnitude v)
-        x1 (/ (x v) mag)
-        y1 (/ (y v) mag)
-        z1 (/ (z v) mag)]
+  (let [mag (magnitude v)]
     ;; I purposefully didn't scale w because it is always 0
-    (vector x1 y1 z1)))
+    (vector (/ x1 mag) (/ y1 mag) (/ z1 mag))))
+
+
+(defn dot [v1 v2]
+  "Compute the dot product of two vectors."
+  (apply core-+ (map core-* v1 v2)))

@@ -101,3 +101,24 @@
 
       (is (= (t/magnitude (t/normalize (t/vector 1 2 3))) 1.0)
           "The magnitude of a normalized vector is 1.0"))))
+
+
+(deftest dot-product
+  (testing "When finding the dot product of two vectors"
+    (is (= (t/dot (t/vector 1 2 3) (t/vector 2 3 4)) 20.0))
+
+    (is (= (t/dot (t/normalize (t/vector 1 2 3))
+                  (t/normalize (t/vector 1 2 3)))
+           1.0)
+        "Normalized vectors are identical")
+
+    (is (= (t/dot (t/normalize (t/vector 1 2 3))
+                  (t/normalize (t/- (t/vector 1 2 3))))
+           -1.0)
+        "Normalized opposite vectors are negative")
+
+    (is (= (t/dot (t/vector 1 0 0) (t/vector 0 1 0)) 0.0)
+        "Vectors are perpendicular")
+
+    (is (= (t/dot (t/vector 1 0 0) (t/vector -1 0 0)) -1.0)
+        "Vectors are opposite")))
