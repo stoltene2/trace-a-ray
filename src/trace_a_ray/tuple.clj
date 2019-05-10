@@ -3,7 +3,8 @@
   (:refer-clojure :rename {vector core-vector
                            vector? core-vector?
                            + core-+
-                           - core--}))
+                           - core--
+                           * core-*}))
 
 (defn vector? [tuple]
   "Check if we have a point or a vector. Be careful using :refer :all
@@ -42,10 +43,25 @@
   "Add two tuples together componentwise"
   (map core-+ t1 t2))
 
-(defn - [t1 t2]
-  "Add two tuples together componentwise"
-  (map core-- t1 t2))
+(defn -
+  "S two tuples together componentwise"
+  ([t1] (map core-- t1))
+  ([t1 t2] (map core-- t1 t2)))
 
-(defn negate [v]
-  "Negate a vector"
-  (- [0 0 0 0] v))
+(defn * [a v]
+  "Scale a vector v by a factor of a."
+  (map #(core-* a %) v))
+
+(defn magnitude [v]
+  "Determine the length or magnitude of a vector"
+  (let [sqr (fn [x] (core-* x x))]
+    (Math/sqrt (apply core-+ (map sqr v)))))
+
+(defn normalize [v]
+  "Normalize a non-zero vector."
+  (let [mag (magnitude v)
+        x1 (/ (x v) mag)
+        y1 (/ (y v) mag)
+        z1 (/ (z v) mag)]
+    ;; I purposefully didn't scale w because it is always 0
+    (vector x1 y1 z1)))

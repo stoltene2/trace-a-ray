@@ -73,4 +73,31 @@
   (testing "When negating a vector"
     (let [zero (t/vector 0 0 0)
           v    (t/vector 1 -2 3)]
-      (is (= (t/negate v) (t/- zero v))))))
+      (is (= (t/- v) (t/- zero v))))))
+
+(deftest scaling
+  (testing "When multiplying a vector by a scalar"
+    (is (= (t/* 2 (t/vector 1 1 1)) (t/vector 2 2 2)))
+    (is (= (t/* 0.5 (t/vector 1 1 1)) (t/vector 0.5 0.5 0.5)))
+    (is (= (t/* 0.5 (t/vector 2 3 4)) (t/vector 1.0 1.5 2.0)))))
+
+
+(deftest magnitude
+  (testing "When determining the magnitude of a vector"
+    (is (= (t/magnitude (t/vector 1 0 0)) 1.0))
+    (is (= (t/magnitude (t/vector 0 1 0)) 1.0))
+    (is (= (t/magnitude (t/vector 0 0 1)) 1.0))
+    (is (= (t/magnitude (t/vector 1 2 3)) (Math/sqrt 14)))))
+
+
+(deftest normalizing
+  (testing "When finding the normal of a vector"
+    (let [sqrt-14 (Math/sqrt 14)]
+      (is (= (t/normalize (t/vector 1 0 0)) (t/vector 1.0 0.0 0.0)))
+
+      (is (tuple-equal?
+           (t/normalize (t/vector 1 2 3))
+           (t/vector (/ 1 sqrt-14) (/ 2 sqrt-14) (/ 3 sqrt-14))))
+
+      (is (= (t/magnitude (t/normalize (t/vector 1 2 3))) 1.0)
+          "The magnitude of a normalized vector is 1.0"))))
