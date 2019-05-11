@@ -1,8 +1,7 @@
 
 (ns trace-a-ray.tuple-test
   (:require [clojure.test :refer :all]
-            [trace-a-ray.tuple :as t]
-            [clojure.test.check :as tc]))
+            [trace-a-ray.tuple :as t]))
 
 (def EPSILON 0.0000001)
 
