@@ -11,3 +11,12 @@
    [0 1 0 y]
    [0 0 1 z]
    [0 0 0 1]])
+
+
+(defn scale [x y z]
+  "Create a matrix transformation which will scale all points and
+  vectors by x, y, and z."
+  [[x 0 0 0]
+   [0 y 0 0]
+   [0 0 z 0]
+   [0 0 0 1]])

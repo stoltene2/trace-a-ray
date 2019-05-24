@@ -32,3 +32,24 @@
     (let [v (tuple/vector -3 4 5)
           trans (transform/translate 5 -3 2)]
       (is (matrix= (m/mmul trans v) v)))))
+
+(deftest scaling
+  (testing "When scaling a point"
+    (let [trans (transform/scale 2 3 4)
+          p (tuple/point -4 6 8)]
+      (is (matrix= (m/mmul trans p) (tuple/point -8 18 32)) "Components are multiplied")))
+
+  (testing "When shrinking a point we can use the inverse"
+    (let [inverse-trans (m/inverse (transform/scale 2 3 4))
+          p (tuple/point -4 6 8)]
+      (is (matrix= (m/mmul inverse-trans p) (tuple/point -2 2 2)) "Components are shrunk")))
+
+  (testing "When reflecting a point we can use negative values"
+    (let [trans (m/inverse (transform/scale -1 1 1))
+          p (tuple/point -4 6 8)]
+      (is (matrix= (m/mmul trans p) (tuple/point 4 6 8)) "x-component flips")))
+
+  (testing "When scaling a vector"
+    (let [trans (transform/scale 2 3 4)
+          v (tuple/vector -4 6 8)]
+      (is (matrix= (m/mmul trans v) (tuple/vector -8 18 32)) "Vectors are scaled too"))))
