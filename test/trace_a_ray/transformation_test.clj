@@ -166,3 +166,27 @@
 
       (is (matrix= (tuple/point 2 3 7) (m/mmul z-by-y p))
           "Multiple of y added back to z"))))
+
+
+(deftest composing-transformations
+  (let [p (tuple/point 1 0 1)
+        A (transform/rotate-x (/ (Math/PI) 2))
+        B (transform/scale 5 5 5)
+        C (transform/translate 10 5 7)]
+
+    (testing "Transformations can be applied in sequence."
+      (let [p_A (m/mmul A p)
+            p_BA (m/mmul B p_A)
+            p_CBA (m/mmul C p_BA)]
+
+        (is (matrix= (tuple/point 1 -1 0) p_A)
+            "A multiplied by p")
+
+        (is (matrix= (tuple/point 5 -5 0) p_BA)
+            "B multiplied by p_A")
+
+        (is (matrix= (tuple/point 15 0 7) p_CBA)
+            "C multiplied by p_BA")))
+
+    (testing "Transformations can be composed and applied."
+      (is (matrix= (tuple/point 15 0 7) (m/mmul C B A p))))))
