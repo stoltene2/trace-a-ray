@@ -137,3 +137,32 @@
 
       (is (matrix= (tuple/point -1 0 0) (m/mmul rot-90-deg original-p))
           "Rotate by 90-deg, y falls to -x because of right hand rule."))))
+
+
+(deftest shearing
+  (let [x-by-y (transform/shearing 1 0 0 0 0 0)
+        x-by-z (transform/shearing 0 1 0 0 0 0)
+        y-by-x (transform/shearing 0 0 1 0 0 0)
+        y-by-z (transform/shearing 0 0 0 1 0 0)
+        z-by-x (transform/shearing 0 0 0 0 1 0)
+        z-by-y (transform/shearing 0 0 0 0 0 1)
+        p (tuple/point 2 3 4)]
+
+    (testing "Moving components in proportion to each other"
+      (is (matrix= (tuple/point 5 3 4) (m/mmul x-by-y p))
+          "Multiple of y added back to x")
+
+      (is (matrix= (tuple/point 6 3 4) (m/mmul x-by-z p))
+          "Multiple of z added back to x")
+
+      (is (matrix= (tuple/point 2 5 4) (m/mmul y-by-x p))
+          "Multiple of x added back to y")
+
+      (is (matrix= (tuple/point 2 7 4) (m/mmul y-by-z p))
+          "Multiple of z added back to y")
+
+      (is (matrix= (tuple/point 2 3 6) (m/mmul z-by-x p))
+          "Multiple of x added back to z")
+
+      (is (matrix= (tuple/point 2 3 7) (m/mmul z-by-y p))
+          "Multiple of y added back to z"))))

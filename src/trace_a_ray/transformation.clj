@@ -39,3 +39,14 @@
    [(Math/sin rad) (Math/cos rad)     0 0]
    [0              0                  1 0]
    [0              0                  0 1]])
+
+
+(defn shearing [x_y x_z  ;Shear x in proportion to y and z
+                y_x y_z  ;Shear y in proportion to x and z
+                z_x z_y] ;Shear z in proportion to x and y
+  "Create a transformation which scales components in proportion to
+  others."
+  [[  1   x_y  x_z  0]
+   [ y_x   1   y_z  0]
+   [ z_x  z_y   1   0]
+   [  0    0    0   1]])
