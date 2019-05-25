@@ -1,4 +1,4 @@
-(ns trace-a-ray.projectile
+(ns trace-a-ray.examples.projectile
   (:require [trace-a-ray.tuple :as t]
             [trace-a-ray.canvas :as canvas]
             [trace-a-ray.color :as color]))
