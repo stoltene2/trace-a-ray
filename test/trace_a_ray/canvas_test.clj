@@ -17,7 +17,6 @@
           c   (canvas/write-pixel 2 3 red (canvas/canvas 10 20))]
       (is (= (canvas/pixel-at 2 3 c) red)))))
 
-;; Need to only grab these no more than 70 columns wide
 (deftest canvas-to-ppm
   (testing "Convert a canvas to ppm"
     (let [c1 (color/color 1 0 0)

@@ -2,17 +2,8 @@
   (:require [trace-a-ray.ray :as ray]
             [trace-a-ray.tuple :as tuple]
             [trace-a-ray.transformation :as trans]
+            [trace-a-ray.helpers :refer :all]
             [clojure.test :refer :all]))
-
-(def EPSILON 0.0000001)
-
-(defn tuple-equal? [t1 t2]
-  "Compares each component of a tuple to verify it is within
-  EPSILON."
-  (let [components (map vector t1 t2)
-        within-epsilon (fn [[x y]] (< (Math/abs (- x y)) EPSILON))]
-    (every? identity (map within-epsilon components))))
-
 
 (deftest creating-a-ray
   (testing "Construction of rays"
@@ -133,10 +124,10 @@
           M (trans/translate 3 4 5)
           r2 (ray/transform r M)]
 
-      (is (tuple-equal? (tuple/point 4 6 8) (.point r2))
+      (is (tuple= (tuple/point 4 6 8) (.point r2))
           "The point of origin for the ray is scaled.")
 
-      (is (tuple-equal? (tuple/vector 0 1 0) (.direction r2))
+      (is (tuple= (tuple/vector 0 1 0) (.direction r2))
           "The direction is not changed since we transformed.")))
 
   (testing "Scaling a ray to object space."
@@ -144,8 +135,8 @@
           M (trans/scale 2 3 4)
           r2 (ray/transform r M)]
 
-      (is (tuple-equal? (tuple/point 2 6 12) (.point r2))
+      (is (tuple= (tuple/point 2 6 12) (.point r2))
           "When scaling the point of origin for the ray is scaled
           too.")
 
-      (is (tuple-equal? (tuple/vector 0 3 0) (.direction r2))))))
+      (is (tuple= (tuple/vector 0 3 0) (.direction r2))))))

@@ -1,16 +1,8 @@
 
 (ns trace-a-ray.tuple-test
   (:require [clojure.test :refer :all]
-            [trace-a-ray.tuple :as t]))
-
-(def EPSILON 0.0000001)
-
-(defn tuple-equal? [t1 t2]
-  "Compares each component of a tuple to verify it is within
-  EPSILON."
-  (let [components (map vector t1 t2)
-        within-epsilon (fn [[x y]] (< (Math/abs (- x y)) EPSILON))]
-    (every? identity (map within-epsilon components))))
+            [trace-a-ray.tuple :as t]
+            [trace-a-ray.helpers :refer :all]))
 
 (deftest tuple-as-point
   (testing "When tuple is a point"
@@ -45,14 +37,14 @@
 (deftest add-tuples
   (testing "When adding tuples together"
     (is
-     (tuple-equal? (t/+ [3 -2 5 1] [-2 3 1 0]) [1, 1, 6, 1]))))
+     (tuple= (t/+ [3 -2 5 1] [-2 3 1 0]) [1, 1, 6, 1]))))
 
 (deftest subtracting-tuples
   (testing "When adding tuples together"
     (let [p1 (t/point   3  2  1)
           p2 (t/point   5  6  7)
           v  (t/vector -2 -4 -6)]
-      (is (tuple-equal? (t/- p1 p2) v))
+      (is (tuple= (t/- p1 p2) v))
       (is (t/vector? (t/- p1 p2)) "Subtracting points yields a vector")))
 
   (testing "When subtracting a vector from a point"
@@ -95,7 +87,7 @@
     (let [sqrt-14 (Math/sqrt 14)]
       (is (= (t/normalize (t/vector 1 0 0)) (t/vector 1.0 0.0 0.0)))
 
-      (is (tuple-equal?
+      (is (tuple=
            (t/normalize (t/vector 1 2 3))
            (t/vector (/ 1 sqrt-14) (/ 2 sqrt-14) (/ 3 sqrt-14))))
 
