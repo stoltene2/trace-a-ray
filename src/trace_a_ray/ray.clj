@@ -1,5 +1,6 @@
 (ns trace-a-ray.ray
-  (:require [trace-a-ray.tuple :as t]))
+  (:require [clojure.core.matrix :as m]
+            [trace-a-ray.tuple :as t]))
 
 (defrecord ray [point direction])
 
@@ -34,3 +35,33 @@
         (if (< t1 t2) [t1 t2] [t2 t1]))
 
       [])))
+
+
+(defn make-world []
+  "Makes an empty world to track object intersections"
+  {})
+
+(defn intersection [t obj world]
+  "Records an intersection at time, t, for the object, obj inside of
+  the world."
+  (let [sorted-insert (fn [old n] (sort (conj old n)))]
+    (update world obj sorted-insert t)))
+
+(defn intersections [obj world]
+  "Return all intersections of an object in the world."
+  (world obj))
+
+(defn hit [is]
+  "Returns the first non-negative intersection for a collection of
+  intersections. Otherwise nil is returned."
+  (->> is
+       (filter pos?)
+       (first)))
+
+
+(defn transform [ray transform]
+  "Transform a ray using transform to convert a ray to object space
+  and back."
+  (let [p (m/mmul transform (.point ray))
+        dir (m/mmul transform (.direction ray))]
+    (->ray p dir)))
