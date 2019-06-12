@@ -2,7 +2,11 @@
   (:require [clojure.core.matrix :as m]
             [trace-a-ray.tuple :as t]))
 
-(defrecord ray [point direction])
+(defrecord Ray [point direction])
+
+(defn make-ray [point direction]
+  "Create a ray record with its origin point and direction"
+  (->Ray point direction))
 
 (defn position [ray time]
   "Determine the position of the ray at time t"
@@ -15,7 +19,7 @@
   and back."
   (let [p (m/mmul transform (.point ray))
         dir (m/mmul transform (.direction ray))]
-    (->ray p dir)))
+    (make-ray p dir)))
 
 
 (defn intersect [sphere ray]

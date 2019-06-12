@@ -10,7 +10,7 @@
   (testing "Construction of rays"
     (let [p (tuple/point 1 1 1)
           dir (tuple/vector 2 3 4)
-          r (ray/->ray p dir)]
+          r (ray/make-ray p dir)]
 
       (is (= (.point r) p)
           "Fetch the point component of a ray")
@@ -22,7 +22,7 @@
   (testing "Determining the position of a ray at time t"
     (let [p (tuple/point 2 3 4)
           dir (tuple/vector 1 0 0)
-          r (ray/->ray p dir)]
+          r (ray/make-ray p dir)]
 
       (is (= (ray/position r 0) (tuple/point 2 3 4))
           "Time 0")
@@ -41,35 +41,35 @@
     (let [s   (sphere/make-sphere)
           p   (tuple/point 0 0 -5)
           dir (tuple/vector 0 0 1)
-          r   (ray/->ray p dir)]
+          r   (ray/make-ray p dir)]
       (is (= [4.0 6.0] (ray/intersect s r)))))
 
   (testing "When a ray intersects a sphere tangentially"
     (let [s   (sphere/make-sphere)
           p   (tuple/point 0 1 -5)
           dir (tuple/vector 0 0 1)
-          r   (ray/->ray p dir)]
+          r   (ray/make-ray p dir)]
       (is (= [5.0 5.0] (ray/intersect s r)))))
 
   (testing "When a ray misses a sphere."
     (let [s   (sphere/make-sphere)
           p   (tuple/point 0 2 -5)
           dir (tuple/vector 0 0 1)
-          r   (ray/->ray p dir)]
+          r   (ray/make-ray p dir)]
       (is (= [] (ray/intersect s r)))))
 
   (testing "When a ray has the point in the interior of a sphere."
     (let [s   (sphere/make-sphere)
           p   (tuple/point 0 0 0)
           dir (tuple/vector 0 0 1)
-          r   (ray/->ray p dir)]
+          r   (ray/make-ray p dir)]
       (is (= [-1.0 1.0] (ray/intersect s r)))))
 
   (testing "When a ray is in front of a sphere and points are in increasing order."
     (let [s   (sphere/make-sphere)
           p   (tuple/point 0 0 5)
           dir (tuple/vector 0 0 1)
-          r   (ray/->ray p dir)]
+          r   (ray/make-ray p dir)]
       (is (= [-6.0 -4.0] (ray/intersect s r))))))
 
 
@@ -117,7 +117,7 @@
 
 (deftest translating-a-ray
   (testing "Translating a ray to object space."
-    (let [r (ray/->ray (tuple/point 1 2 3) (tuple/vector 0 1 0))
+    (let [r (ray/make-ray (tuple/point 1 2 3) (tuple/vector 0 1 0))
           M (trans/translate 3 4 5)
           r2 (ray/transform r M)]
 
@@ -128,7 +128,7 @@
           "The direction is not changed since we transformed.")))
 
   (testing "Scaling a ray to object space."
-    (let [r (ray/->ray (tuple/point 1 2 3) (tuple/vector 0 1 0))
+    (let [r (ray/make-ray (tuple/point 1 2 3) (tuple/vector 0 1 0))
           M (trans/scale 2 3 4)
           r2 (ray/transform r M)]
 

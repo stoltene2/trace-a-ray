@@ -16,13 +16,13 @@
 
 (deftest sphere-intersections
   (testing "Intersecting a scaled sphere with a ray"
-    (let [r (r/->ray (t/point 0 0 -5) (t/vector 0 0 1))
+    (let [r (r/make-ray (t/point 0 0 -5) (t/vector 0 0 1))
           T (trans/scale 2 2 2)
           s (sphere/make-sphere :transform T)]
       (is (tuple= [3 7] (r/intersect s r)))))
 
   (testing "Intersecting a translated sphere with a ray"
-    (let [r (r/->ray (t/point 0 0 -5) (t/vector 0 0 1))
+    (let [r (r/make-ray (t/point 0 0 -5) (t/vector 0 0 1))
           T (trans/translate 5 0 0)
           s (sphere/make-sphere :transform T)]
       (is (= [] (r/intersect s r))))))
