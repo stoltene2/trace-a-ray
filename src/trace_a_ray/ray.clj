@@ -10,13 +10,23 @@
   (t/+ (.point ray) (t/* time (.direction ray))))
 
 
+(defn transform [ray transform]
+  "Transform a ray using transform to convert a ray to object space
+  and back."
+  (let [p (m/mmul transform (.point ray))
+        dir (m/mmul transform (.direction ray))]
+    (->ray p dir)))
+
+
 (defn intersect [sphere ray]
   "Given a unit-sphere and a ray, determine if there are any
   intersections between the two."
 
-  (let [world-origin (t/point 0 0 0)
-        ray-dir (.direction ray)
-        sphere->ray-v (t/- (.point ray) world-origin)
+  (let [;; ray transformed to be relative to the sphere
+        obj-ray (transform ray (m/inverse (.transform sphere)))
+        world-origin (t/point 0 0 0)
+        ray-dir (.direction obj-ray)
+        sphere->ray-v (t/- (.point obj-ray) world-origin)
 
         a (t/dot ray-dir ray-dir)
         b (* 2 (t/dot ray-dir sphere->ray-v))
@@ -57,11 +67,3 @@
   (->> is
        (filter pos?)
        (first)))
-
-
-(defn transform [ray transform]
-  "Transform a ray using transform to convert a ray to object space
-  and back."
-  (let [p (m/mmul transform (.point ray))
-        dir (m/mmul transform (.direction ray))]
-    (->ray p dir)))

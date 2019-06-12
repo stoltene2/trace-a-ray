@@ -13,4 +13,4 @@
 (defn matrix= [m1 m2]
   "Compares each component of matrices to verify they are within
   EPSILON."
-  (tuple= m1 m2))
+  (tuple= (flatten m1) (flatten m2)))

@@ -1,6 +1,7 @@
 (ns trace-a-ray.ray-test
   (:require [trace-a-ray.ray :as ray]
             [trace-a-ray.tuple :as tuple]
+            [trace-a-ray.sphere :as sphere]
             [trace-a-ray.transformation :as trans]
             [trace-a-ray.helpers :refer :all]
             [clojure.test :refer :all]))
@@ -35,50 +36,46 @@
       (is (= (ray/position r 2.5) (tuple/point 4.5 3.0 4.0))
           "Time 2.5"))))
 
-(defn sphere []
-  "Create a unit-sphere."
-  [])
-
 (deftest ray-sphere-intersection
   (testing "When a ray intersects a sphere in two points."
-    (let [s (sphere)
-          p (tuple/point 0 0 -5)
+    (let [s   (sphere/make-sphere)
+          p   (tuple/point 0 0 -5)
           dir (tuple/vector 0 0 1)
-          r (ray/->ray p dir)]
+          r   (ray/->ray p dir)]
       (is (= [4.0 6.0] (ray/intersect s r)))))
 
   (testing "When a ray intersects a sphere tangentially"
-    (let [s (sphere)
-          p (tuple/point 0 1 -5)
+    (let [s   (sphere/make-sphere)
+          p   (tuple/point 0 1 -5)
           dir (tuple/vector 0 0 1)
-          r (ray/->ray p dir)]
+          r   (ray/->ray p dir)]
       (is (= [5.0 5.0] (ray/intersect s r)))))
 
   (testing "When a ray misses a sphere."
-    (let [s (sphere)
-          p (tuple/point 0 2 -5)
+    (let [s   (sphere/make-sphere)
+          p   (tuple/point 0 2 -5)
           dir (tuple/vector 0 0 1)
-          r (ray/->ray p dir)]
+          r   (ray/->ray p dir)]
       (is (= [] (ray/intersect s r)))))
 
   (testing "When a ray has the point in the interior of a sphere."
-    (let [s (sphere)
-          p (tuple/point 0 0 0)
+    (let [s   (sphere/make-sphere)
+          p   (tuple/point 0 0 0)
           dir (tuple/vector 0 0 1)
-          r (ray/->ray p dir)]
+          r   (ray/->ray p dir)]
       (is (= [-1.0 1.0] (ray/intersect s r)))))
 
   (testing "When a ray is in front of a sphere and points are in increasing order."
-    (let [s (sphere)
-          p (tuple/point 0 0 5)
+    (let [s   (sphere/make-sphere)
+          p   (tuple/point 0 0 5)
           dir (tuple/vector 0 0 1)
-          r (ray/->ray p dir)]
+          r   (ray/->ray p dir)]
       (is (= [-6.0 -4.0] (ray/intersect s r))))))
 
 
 (deftest determining-hits-and-intersections-in-the-world
   (testing "When all intersections have positive time values."
-    (let [s      (sphere)
+    (let [s      (sphere/make-sphere)
           world  (->> (ray/make-world)
                       (ray/intersection 1 s)
                       (ray/intersection 2 s))
@@ -88,7 +85,7 @@
           "The lowest t-value should be returned.")))
 
   (testing "When some intersections are negative valued."
-    (let [s      (sphere)
+    (let [s      (sphere/make-sphere)
           world  (->> (ray/make-world)
                       (ray/intersection -1 s)
                       (ray/intersection 1 s))
@@ -98,7 +95,7 @@
           "The lowest non-negative t should be returned")))
 
   (testing "When all intersections have negative time values."
-    (let [s      (sphere)
+    (let [s      (sphere/make-sphere)
           world  (->> (ray/make-world)
                       (ray/intersection -2 s)
                       (ray/intersection -1 s))
@@ -108,7 +105,7 @@
           "There should be no intersections")))
 
   (testing "When all intersections have positive time values."
-    (let [s      (sphere)
+    (let [s      (sphere/make-sphere)
           world  (->> (ray/make-world)
                       (ray/intersection 5 s)
                       (ray/intersection 7 s)
