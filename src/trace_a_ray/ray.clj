@@ -23,7 +23,7 @@
 
 
 (defn intersect [sphere ray]
-  "Given a unit-sphere and a ray, determine if there are any
+  "Given a sphere and a ray, determine if there are any
   intersections between the two."
 
   (let [;; ray transformed to be relative to the sphere
