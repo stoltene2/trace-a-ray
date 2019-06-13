@@ -1,4 +1,4 @@
-(ns traca-a-ray.examples.clock
+(ns trace-a-ray.examples.clock
   (:require [trace-a-ray.transformation :as trans]
             [trace-a-ray.tuple :as tuple]
             [clojure.core.matrix :as m]
@@ -33,11 +33,6 @@
         points (repeat twelve-o-clock)]
     (map m/mmul scale-transforms rotate-transforms points)))
 
-;; Points needed for a canvas plot
-(def canvas-points (translate-points-to-center 100 100 clock-points))
-
-(def canvas-points-spiral (translate-points-to-center 100 100 spiral-points))
-
 (defn translate-points-to-center [x y points]
   "Given dimensions x and y of the resulting image translate points
   from origin to image center.
@@ -48,6 +43,12 @@
         center-x (find-midpoint x)
         center-y (find-midpoint y)]
     (m/transpose (m/mmul (trans/translate center-x center-y 0) (m/transpose points)))))
+
+;; Points needed for a canvas plot
+(def canvas-points (translate-points-to-center 100 100 clock-points))
+
+(def canvas-points-spiral (translate-points-to-center 100 100 spiral-points))
+
 
 ;; This is largely copied from projectile.clj
 
