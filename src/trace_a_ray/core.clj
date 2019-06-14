@@ -1,7 +1,10 @@
 (ns trace-a-ray.core
+  (:require [trace-a-ray.examples.projected-circle :as example])
   (:gen-class))
 
 (defn -main
-  "I don't do a whole lot ... yet."
+  "I print out a projected circle"
   [& args]
-  (println "Hello, World!"))
+  (do
+    (println "Generating /tmp/sphere.ppm")
+    (time (spit "/tmp/sphere.ppm" (example/intersections-to-ppm)))))
