@@ -2,12 +2,15 @@
 
 (def ^:private EPSILON 0.0000001)
 
+;; TODO: This passes if t1 is empty or nil
+;; This is because of the map
 (defn tuple= [t1 t2]
   "Compares each component of a tuple to verify it is within
   EPSILON."
   (let [components (map vector t1 t2)
         within-epsilon (fn [[x y]] (< (Math/abs (- x y)) EPSILON))]
-    (every? identity (map within-epsilon components))))
+    (and (= (count t1) (count t2))
+     (every? identity (map within-epsilon components)))))
 
 
 (defn matrix= [m1 m2]

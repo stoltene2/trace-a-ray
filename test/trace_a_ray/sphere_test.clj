@@ -26,3 +26,18 @@
           T (trans/translate 5 0 0)
           s (sphere/make-sphere :transform T)]
       (is (= [] (r/intersect s r))))))
+
+(deftest sphere-normal-vectors
+  (testing "Computing normal vectors on unit-sphere"
+    (let [s (sphere/make-sphere)
+          sqrt3-3 (/ (Math/sqrt 3.0) 3.0)]
+      (is (tuple= (t/vector 1 0 0) (sphere/normal s (t/point 1 0 0))))
+      (is (tuple= (t/vector 0 1 0) (sphere/normal s (t/point 0 1 0))))
+      (is (tuple= (t/vector 0 0 1) (sphere/normal s (t/point 0 0 1))))
+      (is (tuple= (t/vector sqrt3-3 sqrt3-3 sqrt3-3) (sphere/normal s (t/point sqrt3-3 sqrt3-3 sqrt3-3))))))
+
+  (testing "Normal is a normalized vector"
+    (let [s (sphere/make-sphere)
+          sqrt3-3 (/ (Math/sqrt 3.0) 3.0)]
+      (is (tuple= (t/normalize (t/vector sqrt3-3 sqrt3-3 sqrt3-3))
+                  (sphere/normal s (t/point sqrt3-3 sqrt3-3 sqrt3-3)))))))
