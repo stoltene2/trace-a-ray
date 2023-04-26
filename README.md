@@ -12,9 +12,9 @@ Clone the repository.
 
 ## Usage
 
-Execute the following,
+Execute the following with nix installed and flakes enabled,
 
-    $ lein run
+    $ nix run
 
 ## Options
 
