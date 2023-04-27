@@ -11,18 +11,28 @@
     };
   };
   outputs = { self, nixpkgs, flake-utils, clj-nix }:
-    let
-      system = "x86_64-darwin";
-      pkgs = nixpkgs.legacyPackages.${system};
-      cljpkgs = clj-nix.packages."${system}";
-    in
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+        cljpkgs = clj-nix.packages."${system}";
+      in
+        {
+          packages = rec
+            {
+              trace-a-ray = cljpkgs.mkCljBin {
+                projectSrc = ./.;
+                name = "trace-a-ray/ray";
+                main-ns = "trace-a-ray.core";
+                jdkRunner = pkgs.jdk17_headless;
+              };
+              default = trace-a-ray;
+            };
 
-      {
-        packages.x86_64-darwin.default = cljpkgs.mkCljBin {
-          projectSrc = ./.;
-          name = "trace-a-ray/ray";
-          main-ns = "trace-a-ray.core";
-          jdkRunner = pkgs.jdk17_headless;
-        };
-      };
+          devShell = pkgs.mkShell {
+            name = "local-dev";
+            buildInputs = [pkgs.bash pkgs.clojure pkgs.clojure-lsp];
+          };
+
+        }
+    );
 }
