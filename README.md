@@ -20,6 +20,18 @@ Execute the following with nix installed and flakes enabled,
 
 Currently there are no options.
 
+## Development
+
+The development environment builds with Nix and notably
+[clj-nix](https://github.com/jlesquembre/clj-nix). I used a pinned
+version of clj-nix below so that the lockfile will get generated
+consistently. I found the hash using `nix flake info github:jlesquembre/clj-nix`
+
+### Updating Maven dependencies
+
+    $ nix run github:jlesquembre/clj-nix/7d9e244ea96988524ba3bd6c2bbafdf0a5340b96#deps-lock
+    $ nix build
+
 ## Examples
 
 ### Sphere projection

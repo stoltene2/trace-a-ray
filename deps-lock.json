@@ -18,14 +18,14 @@
       "hash": "sha256-o4fyBJgjH5bJwQEqoyROfB4kDpQY1/owgTHvD7Wm5Ik="
     },
     {
-      "mvn-path": "net/mikera/core.matrix/0.62.0/core.matrix-0.62.0.jar",
+      "mvn-path": "net/mikera/core.matrix/0.63.0/core.matrix-0.63.0.jar",
       "mvn-repo": "https://repo.clojars.org/",
-      "hash": "sha256-ztPm6xUgQt2iKacx1it7/cSZOWEod+66z0W+Bu2txrY="
+      "hash": "sha256-UCxlj7Q0EDgwxgDNCMAfPJdQPuwS2W6tklB4UwQAnuI="
     },
     {
-      "mvn-path": "net/mikera/core.matrix/0.62.0/core.matrix-0.62.0.pom",
+      "mvn-path": "net/mikera/core.matrix/0.63.0/core.matrix-0.63.0.pom",
       "mvn-repo": "https://repo.clojars.org/",
-      "hash": "sha256-HHHepOk6Dlpa1r2OiGyHqUhC0jUvovRSeUf6tsv3nV8="
+      "hash": "sha256-T3MYieJGpsINFq3W3PElUPj8pLEeW9Vjefa28UHeMcA="
     },
     {
       "mvn-path": "net/mikera/mathz/0.3.0/mathz-0.3.0.jar",
