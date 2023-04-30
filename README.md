@@ -32,6 +32,11 @@ consistently. I found the hash using `nix flake info github:jlesquembre/clj-nix`
     $ nix run github:jlesquembre/clj-nix/7d9e244ea96988524ba3bd6c2bbafdf0a5340b96#deps-lock
     $ nix build
 
+
+## Testing
+
+To run tests enter the nix shell with `nix develop` then execute `clj -X:test`
+
 ## Examples
 
 ### Sphere projection
