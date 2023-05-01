@@ -10,6 +10,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
+
   outputs = { self, nixpkgs, flake-utils, clj-nix }:
     flake-utils.lib.eachDefaultSystem (system:
       let
@@ -24,14 +25,27 @@
                 name = "trace-a-ray/ray";
                 main-ns = "trace-a-ray.core";
                 jdkRunner = pkgs.jdk17_headless;
+
+                doCheck = true;
+                checkPhase = "clj -M:test";
               };
               default = trace-a-ray;
             };
 
-          devShell = pkgs.mkShell {
-            name = "local-dev";
-            buildInputs = [pkgs.bash pkgs.clojure pkgs.clojure-lsp];
+          devShells = {
+            trace-a-ray = pkgs.mkShell {
+              name = "local-dev";
+              buildInputs = [pkgs.bash pkgs.clojure pkgs.clojure-lsp];
+            };
           };
+
+          # checks = {
+          #   trace-a-ray = pkgs.stdenv.${system}.mkDerivation {
+          #     src = ./.;
+          #     buildInputs = [pkgs.bash pkgs.clojure];
+          #     buildCommand = "clj -X:test";
+          #   };
+          # };
 
         }
     );
