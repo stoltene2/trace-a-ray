@@ -12,6 +12,16 @@
   ],
   "mvn-deps": [
     {
+      "mvn-path": "com/clojure-goes-fast/clj-async-profiler/1.0.3/clj-async-profiler-1.0.3.jar",
+      "mvn-repo": "https://repo.clojars.org/",
+      "hash": "sha256-QdFiP4ck2fUUwC5XXvUjZ8PSP+9RGsBIlPz6ndG1o/c="
+    },
+    {
+      "mvn-path": "com/clojure-goes-fast/clj-async-profiler/1.0.3/clj-async-profiler-1.0.3.pom",
+      "mvn-repo": "https://repo.clojars.org/",
+      "hash": "sha256-dxa5i4dimtU9V+KGd1w8z/WX+ucUAIaS1H0TImbGxKk="
+    },
+    {
       "mvn-path": "net/mikera/clojure-pom/0.6.0/clojure-pom-0.6.0.pom",
       "mvn-repo": "https://repo.clojars.org/",
       "hash": "sha256-ApT9U7aW/29SAU5XUeJXiHii5kkP/SiwPHvX5A9/HVw="

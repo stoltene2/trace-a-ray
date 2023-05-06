@@ -37,6 +37,14 @@ consistently. I found the hash using `nix flake info github:jlesquembre/clj-nix`
 
 To run tests enter the nix shell with `nix develop` then execute `clj -X:test`
 
+## Profiling
+
+    $ clj -J-Djdk.attach.allowAttachSelf
+    $ (require '[trace-a-ray.core])
+    $ (require '[clj-async-profiler.core :as prof])
+    $ (prof/profile (trace-a-ray.core/-main))
+    $ (prof/serve-ui 8080)
+
 ## Examples
 
 ### Sphere projection

@@ -27,7 +27,7 @@
   intersections between the two."
 
   (let [;; ray transformed to be relative to the sphere
-        obj-ray (transform ray (m/inverse (.transform sphere)))
+        obj-ray (transform ray (.inverse-transform sphere))
         world-origin (t/point 0 0 0)
         ray-dir (.direction obj-ray)
         sphere->ray-v (t/- (.point obj-ray) world-origin)

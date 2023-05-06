@@ -1,6 +1,7 @@
 {:deps {org.clojure/clojure {:mvn/version "1.11.1"}
         net.mikera/core.matrix {:mvn/version "0.63.0"}
-        net.mikera/vectorz-clj {:mvn/version "0.48.0"}}
+        net.mikera/vectorz-clj {:mvn/version "0.48.0"}
+        com.clojure-goes-fast/clj-async-profiler {:mvn/version "1.0.3"}}
  :paths ["src"]
 
  :aliases
