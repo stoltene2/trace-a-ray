@@ -28,9 +28,8 @@
 
   (let [;; ray transformed to be relative to the sphere
         obj-ray (transform ray (.inverse-transform sphere))
-        world-origin (t/point 0 0 0)
         ray-dir (.direction obj-ray)
-        sphere->ray-v (t/- (.point obj-ray) world-origin)
+        sphere->ray-v (t/- (.point obj-ray) t/world-origin)
 
         a (t/dot ray-dir ray-dir)
         b (* 2 (t/dot ray-dir sphere->ray-v))

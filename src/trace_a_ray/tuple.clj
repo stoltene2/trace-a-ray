@@ -39,9 +39,16 @@
   "Creates a vector."
   [x y z 0.0])
 
-(defn + [t1 t2]
+(def world-origin
+  "Center point in the world scene"
+  (point 0 0 0))
+
+(defn +
   "Add two tuples together componentwise"
-  (map core-+ t1 t2))
+  [[x1 y1 z1 w1] [x2 y2 z2 w2]]
+  (if (nil? w1)
+    [(core-+ x1 x2) (core-+ y1 y2) (core-+ z1 z2)]
+    [(core-+ x1 x2) (core-+ y1 y2) (core-+ z1 z2) (core-+ w1 w2)]))
 
 (defn -
   "S two tuples together componentwise"
@@ -63,9 +70,11 @@
     ;; I purposefully didn't scale w because it is always 0
     (vector (/ x1 mag) (/ y1 mag) (/ z1 mag))))
 
-(defn dot [v1 v2]
+(defn dot [[x1 y1 z1 w1] [x2 y2 z2 w2]]
   "Compute the dot product of two vectors."
-  (apply core-+ (map core-* v1 v2)))
+  (if (nil? w1)
+    (core-+ (core-* x1 x2) (core-* y1 y2) (core-* z1 z2))
+    (core-+ (core-* x1 x2) (core-* y1 y2) (core-* z1 z2) (core-* w1 w2))))
 
 
 (defn cross [v1 v2]

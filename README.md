@@ -16,6 +16,11 @@ Execute the following with nix installed and flakes enabled,
 
     $ nix run
 
+or
+
+    $ nix develop
+    $ clojure -M -m trace-a-ray.core
+
 ## Options
 
 Currently there are no options.
@@ -39,11 +44,13 @@ To run tests enter the nix shell with `nix develop` then execute `clj -X:test`
 
 ## Profiling
 
-    $ clj -J-Djdk.attach.allowAttachSelf
-    $ (require '[trace-a-ray.core])
-    $ (require '[clj-async-profiler.core :as prof])
-    $ (prof/profile (trace-a-ray.core/-main))
-    $ (prof/serve-ui 8080)
+```clojure
+clj -J-Djdk.attach.allowAttachSelf
+(require '[trace-a-ray.core])
+(require '[clj-async-profiler.core :as prof])
+(prof/profile (trace-a-ray.core/-main))
+(prof/serve-ui 8080)
+```
 
 ## Examples
 
