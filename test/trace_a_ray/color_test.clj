@@ -5,9 +5,9 @@
 
 (deftest color-components
   (testing "When getting the components of a color"
-    (let [r 1
-          g 2
-          b 3
+    (let [r 1.0
+          g 2.0
+          b 3.0
           c (c/color r g b)]
       (is (= (c/red c) r))
       (is (= (c/green c) g))

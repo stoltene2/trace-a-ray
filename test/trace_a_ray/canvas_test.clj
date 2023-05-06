@@ -5,7 +5,7 @@
 
 (defn all-blank [c]
   "Determines that every component is mapped to 0."
-  (every? #(= 0 %) (flatten c)))
+  (every? #(= 0.0 %) (flatten c)))
 
 (deftest saving-a-convas
   (testing "We can default all points on a canvas to black"

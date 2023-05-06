@@ -33,11 +33,11 @@
 
 (defn point [x y z]
   "Creates a point."
-  [x y z 1.0])
+  [(double x) (double y) (double z) 1.0])
 
 (defn vector [x y z]
   "Creates a vector."
-  [x y z 0.0])
+  [(double x) (double y) (double z) 0.0])
 
 (def world-origin
   "Center point in the world scene"
@@ -51,18 +51,20 @@
     [(core-+ x1 x2) (core-+ y1 y2) (core-+ z1 z2) (core-+ w1 w2)]))
 
 (defn -
-  "S two tuples together componentwise"
+  "Subtract two tuples together componentwise"
   ([t1] (map core-- t1))
   ([t1 t2] (map core-- t1 t2)))
 
-(defn * [a v]
+(defn * [a [x y z]]
   "Scale a vector v by a factor of a."
-  (map #(core-* a %) v))
+  (vector (core-* a x) (core-* a y) (core-* a z)))
 
-(defn magnitude [v]
-  "Determine the length or magnitude of a vector"
+(defn magnitude [[x y z w]]
+  "Determine the length or magnitude of a 3d or 4d vector"
   (let [sqr (fn [x] (core-* x x))]
-    (Math/sqrt (apply core-+ (map sqr v)))))
+    (if (nil? w)
+      (Math/sqrt (core-+ (core-* x x) (core-* y y) (core-* z z)))
+      (Math/sqrt (core-+ (core-* x x) (core-* y y) (core-* z z) (core-* w w))))))
 
 (defn normalize [[x1 y1 z1 :as v]]
   "Normalize a non-zero vector."
@@ -77,11 +79,9 @@
     (core-+ (core-* x1 x2) (core-* y1 y2) (core-* z1 z2) (core-* w1 w2))))
 
 
-(defn cross [v1 v2]
+(defn cross [[ax ay az] [bx by bz]]
   "Compute the cross product of two vectors"
-  (let [[ax ay az & rest] v1
-        [bx by bz & rest] v2
-        x (core-- (core-* ay bz) (core-* az by))
+  (let [x (core-- (core-* ay bz) (core-* az by))
         y (core-- (core-* az bx) (core-* ax bz))
         z (core-- (core-* ax by) (core-* ay bx))]
     (vector x y z)))

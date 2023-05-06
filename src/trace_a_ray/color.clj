@@ -5,7 +5,7 @@
                            * core-*}))
 
 (defn color [r g b]
-  [r g b])
+  [(double r) (double g) (double b)])
 
 (defn red [[r _ _]]
   "The red component of a color"
@@ -19,6 +19,7 @@
   "The blue component of a color"
   b)
 
+;; I should create a protocol here
 (defn + [c1 c2]
   "Add two colors together"
   (t/+ c1 c2))
@@ -34,8 +35,8 @@
               :scalar)))
 
 
-(defmethod mul :hadamard [c1 c2]
-  (vec (map core-* c1 c2)))
+(defmethod mul :hadamard [[r1 g1 b1] [r2 g2 b2]]
+  [(core-* r1 r2) (core-* g1 g2) (core-* b1 b2)])
 
 (defmethod mul :scalar [n c]
   (t/* n c))

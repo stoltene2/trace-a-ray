@@ -26,12 +26,12 @@
 
 (deftest make-a-point
   (testing "When we create a point"
-    (is (= (t/point 1 2 3) [1 2 3 1.0]))))
+    (is (= (t/point 1 2 3) [1.0 2.0 3.0 1.0]))))
 
 
 (deftest make-a-vec
   (testing "When we create a point"
-    (is (= (t/vector 1 2 3) [1 2 3 0.0]))))
+    (is (= (t/vector 1 2 3) [1.0 2.0 3.0 0.0]))))
 
 
 (deftest add-tuples
