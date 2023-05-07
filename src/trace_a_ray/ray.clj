@@ -71,3 +71,15 @@
   (->> is
        (filter pos?)
        (first)))
+
+(comment
+  (require '[trace-a-ray.ray :as ray ] :reload)
+  (require '[trace-a-ray.sphere :as sphere] :reload)
+  (require '[trace-a-ray.ray :as ray ] :reload)
+  (require '[trace-a-ray.tuple :as tuple] :reload)
+  (time (dotimes [_ 100000]
+          (let [s   (sphere/make-sphere)
+                p   (tuple/point 0 0 -5)
+                dir (tuple/vector 0 0 1)
+                r   (ray/make-ray p dir)]
+            (ray/intersect s r)))))

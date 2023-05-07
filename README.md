@@ -75,6 +75,24 @@ Performance is an ongoing consideration. Step one is to make the
 implementations correct. Step two is to find optimal ways of
 generating the scenes.
 
+If you want to isolate a function use something like the following on
+the REPL. Update the implementation of the `intersect` function and
+measure again.
+
+```clojure
+(comment
+  (require '[trace-a-ray.ray :as ray ] :reload)
+  (require '[trace-a-ray.sphere :as sphere] :reload)
+  (require '[trace-a-ray.ray :as ray ] :reload)
+  (require '[trace-a-ray.tuple :as tuple] :reload)
+  (time (dotimes [_ 100000]
+          (let [s   (sphere/make-sphere)
+                p   (tuple/point 0 0 -5)
+                dir (tuple/vector 0 0 1)
+                r   (ray/make-ray p dir)]
+            (ray/intersect s r)))))
+```
+
 ### Generating examples
 
 1. Install netpbm
