@@ -43,8 +43,9 @@
 
       (let [discriminiate-sqrt (Math/sqrt discriminate)
             two-a (* 2 a)
-            t1 (/ (- (- b) discriminiate-sqrt) two-a)
-            t2 (/ (+ (- b) discriminiate-sqrt) two-a)]
+            neg-b (- b)
+            t1 (/ (- neg-b discriminiate-sqrt) two-a)
+            t2 (/ (+ neg-b discriminiate-sqrt) two-a)]
         (if (< t1 t2) [t1 t2] [t2 t1]))
 
       [])))

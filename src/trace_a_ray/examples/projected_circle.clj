@@ -44,7 +44,10 @@
                                                    ; the vector to a
                                                    ; point by changing
                                                    ; the last 0 to 1.
-    (map #(->> % :direction vec-to-point) (filter (fn [ray] (not (empty? (ray/intersect sphere ray)))) rays))))
+    (map #(->> % :direction vec-to-point)
+         (filter (fn [ray]
+                   (not (empty? (ray/intersect sphere ray))))
+                 rays))))
 
 
 
