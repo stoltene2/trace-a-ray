@@ -32,6 +32,15 @@ The development environment builds with Nix and notably
 version of clj-nix below so that the lockfile will get generated
 consistently. I found the hash using `nix flake info github:jlesquembre/clj-nix`
 
+### Connecting to nrepl
+
+To connect to nRepl you need to log into the nix develop shell and launch the server
+
+```shell
+nix develop
+clj -M:cider-clj
+```
+
 ### Updating Maven dependencies
 
     $ nix run github:jlesquembre/clj-nix/7d9e244ea96988524ba3bd6c2bbafdf0a5340b96#deps-lock

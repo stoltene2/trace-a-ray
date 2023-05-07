@@ -38,15 +38,6 @@
               buildInputs = [pkgs.bash pkgs.clojure pkgs.clojure-lsp];
             };
           };
-
-          # checks = {
-          #   trace-a-ray = pkgs.stdenv.${system}.mkDerivation {
-          #     src = ./.;
-          #     buildInputs = [pkgs.bash pkgs.clojure];
-          #     buildCommand = "clj -X:test";
-          #   };
-          # };
-
         }
     );
 }
