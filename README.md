@@ -8,7 +8,8 @@ Buck](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge).
 
 ## Installation
 
-Clone the repository.
+Clone the repository and execute `nix run`. You can also run it
+without cloning by executing `nix run github:stoltene2/trace-a-ray`
 
 ## Usage
 
@@ -101,7 +102,7 @@ measure again.
 
 ## License
 
-Copyright © 2019 Eric Stolten
+Copyright © 2019-2023 Eric Stolten
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
