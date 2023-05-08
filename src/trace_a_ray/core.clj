@@ -7,4 +7,5 @@
   [& args]
   (do
     (println "Generating /tmp/sphere.ppm")
-    (time (spit "/tmp/sphere.ppm" (example/intersections-to-ppm)))))
+    (dotimes [_ 5]
+      (time (spit "/tmp/sphere.ppm" (example/intersections-to-ppm))))))

@@ -40,6 +40,9 @@ To connect to nRepl you need to log into the nix develop shell and launch the se
 ```shell
 nix develop
 clj -M:cider-clj
+
+# Or with profiling support
+clj -M:cider-clj -J-Djdk.attach.allowAttachSelf
 ```
 
 ### Updating Maven dependencies
@@ -52,7 +55,9 @@ clj -M:cider-clj
 
 To run tests enter the nix shell with `nix develop` then execute `clj -X:test`
 
-## Profiling
+## Profiling with flame charts
+
+You need to launch the repl with the ability to launch the [profiler](https://github.com/clojure-goes-fast/clj-async-profiler).
 
 ```clojure
 clj -J-Djdk.attach.allowAttachSelf

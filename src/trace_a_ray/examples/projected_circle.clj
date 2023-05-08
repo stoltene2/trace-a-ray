@@ -85,8 +85,9 @@ The coordinates will be rounded to integer values."
         max-y  500
         canvas (canvas/canvas max-x max-y)
 
-        points (filter (fn [[x y]] (and (in-interval x 0 (dec max-x))
-                                        (in-interval y 0 (dec max-y)))) (map (partial point-to-pixel max-x max-y) ps))
+        points (->> ps (map #(point-to-pixel max-x max-y %))
+                    (filter (fn [[x y]] (and (in-interval x 0 (dec max-x))
+                                             (in-interval y 0 (dec max-y))))))
         white  (color/color 255 255 255)]
     (loop [canvas canvas
            points points
@@ -102,7 +103,7 @@ The coordinates will be rounded to integer values."
 ;;;============================== Copied again
 
 (defn intersections-to-ppm []
-  "Convert the intersections to a ppm file"
+  "This is the main entry point here"
   (make-ppm (translate-points-to-center 500 500 (intersections-to-points rays-from-source-to-wall sphere))))
 
 
@@ -110,3 +111,16 @@ The coordinates will be rounded to integer values."
 ;; Write file with
 (comment
   (spit "/tmp/sphere.ppm" (intersections-to-ppm)))
+
+
+(comment
+  ;; Profiling
+  (require '[clj-async-profiler.core :as prof])
+  (def points (intersections-to-points rays-from-source-to-wall sphere))
+  (prof/profile (time
+                 (do
+                   (translate-points-to-center 500 500
+                                               (intersections-to-points rays-from-source-to-wall sphere))
+                   [])))
+  (prof/serve-ui 8080)
+  )
