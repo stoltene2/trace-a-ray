@@ -7,6 +7,8 @@
             [trace-a-ray.transformation :as trans]
             [clojure.core.matrix :as m]))
 
+;; Where to put this?
+(m/set-current-implementation :vectorz)
 
 (def ^:private sphere
   "Create the unit sphere in the scene."
@@ -35,7 +37,7 @@
 ;; updating the vector here could be expensive...
 (defn intersections-to-points [rays sphere]
   "Get the two dimensional points projected onto the plane at z=10"
-  (let [vec-to-point (fn [vec] (assoc vec 3 1.0))] ; instead of
+  (let [vec-to-point (fn [vec] (m/mset vec 3 1.0))] ; instead of
                                                    ; finding
                                                    ; intersections
                                                    ; with plane I'm

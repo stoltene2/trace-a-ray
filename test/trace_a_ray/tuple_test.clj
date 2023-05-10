@@ -2,7 +2,8 @@
 (ns trace-a-ray.tuple-test
   (:require [clojure.test :refer :all]
             [trace-a-ray.tuple :as t]
-            [trace-a-ray.helpers :refer :all]))
+            [trace-a-ray.helpers :refer :all]
+            [clojure.core.matrix :as m]))
 
 (deftest tuple-as-point
   (testing "When tuple is a point"
@@ -26,12 +27,12 @@
 
 (deftest make-a-point
   (testing "When we create a point"
-    (is (= (t/point 1 2 3) [1.0 2.0 3.0 1.0]))))
+    (is (= (t/point 1 2 3) (m/matrix [1.0 2.0 3.0 1.0])))))
 
 
 (deftest make-a-vec
   (testing "When we create a point"
-    (is (= (t/vector 1 2 3) [1.0 2.0 3.0 0.0]))))
+    (is (= (t/vector 1 2 3) (m/matrix [1.0 2.0 3.0 0.0])))))
 
 
 (deftest add-tuples
@@ -51,14 +52,14 @@
     (let [p1 (t/point  3  2  1)
           v1 (t/vector 5  6  7)
           p  (t/point -2 -4 -6)]
-      (is (= (t/- p1 v1) p) "Point minus vector is point")
+      (is (m/equals (t/- p1 v1) p) "Point minus vector is point")
       (is (t/point? (t/- p1 v1)) "Point minus vector is point")))
 
   (testing "When subtracting two vectors we get another vector"
     (let [v1 (t/vector  3  2  1)
           v2 (t/vector 5  6  7)
           v  (t/vector -2 -4 -6)]
-      (is (= (t/- v1 v2) v) "Point minus vector is point")
+      (is (m/equals (t/- v1 v2) v) "Point minus vector is point")
       (is (t/vector? (t/- v1 v2)) "Point minus vector is point"))))
 
 (deftest negating
@@ -122,7 +123,7 @@
     (let [a (t/vector 1 2 3)
           b (t/vector 2 3 4)]
 
-      (is (= (t/cross (t/vector 1 2 3) (t/vector 2 3 4))
+      (is (m/equals (t/cross (t/vector 1 2 3) (t/vector 2 3 4))
              (t/vector -1 2 -1)))
 
       (is (= (t/cross b a)
