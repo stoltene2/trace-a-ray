@@ -21,7 +21,6 @@
         dir (m/mmul transform (.direction ray))]
     (make-ray p dir)))
 
-
 (defn intersect [sphere ray]
   "Given a sphere and a ray, determine if there are any
   intersections between the two."
@@ -31,21 +30,21 @@
         ray-dir (.direction obj-ray)
         sphere->ray-v (t/- (.point obj-ray) t/world-origin)
 
-        a (t/dot ray-dir ray-dir)
-        b (* 2 (t/dot ray-dir sphere->ray-v))
-        c (dec (t/dot sphere->ray-v sphere->ray-v))
+        a (double (t/dot ray-dir ray-dir))
+        b (* 2 (double (t/dot ray-dir sphere->ray-v)))
+        c (dec (double (t/dot sphere->ray-v sphere->ray-v)))
 
-        discriminate (- (* b b) (* 4 a c))
+        discriminate (double (- (* b b) (* 4 a c)))
 
         has-roots? (>= discriminate 0)]
 
     (if has-roots?
 
       (let [discriminiate-sqrt (Math/sqrt discriminate)
-            two-a (* 2 a)
-            neg-b (- b)
-            t1 (/ (- neg-b discriminiate-sqrt) two-a)
-            t2 (/ (+ neg-b discriminiate-sqrt) two-a)]
+            two-a (double (* 2 a))
+            neg-b (double (- b))
+            t1 (double (/ (double (- neg-b discriminiate-sqrt)) two-a))
+            t2 (double (/ (double (+ neg-b discriminiate-sqrt)) two-a))]
         (if (< t1 t2) [t1 t2] [t2 t1]))
 
       [])))
