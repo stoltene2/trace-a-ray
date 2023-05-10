@@ -99,6 +99,12 @@ measure again.
             (ray/intersect s r)))))
 ```
 
+#### Using unboxed values inside of let bindings
+
+In the repl, if you set `(set! *unchecked-math* :warn-on-boxed)` you
+will be warned when primitive operations aren't using unboxed
+types. This shaved 2s off of the ray intersections with the sphere.
+
 ### Generating examples
 
 1. Install netpbm
