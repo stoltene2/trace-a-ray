@@ -124,3 +124,13 @@ The coordinates will be rounded to integer values."
                    [])))
   (prof/serve-ui 8080)
   )
+
+(comment
+  (require '[clj-async-profiler.core :as prof])
+  (def points (intersections-to-points rays-from-source-to-wall sphere))
+  (prof/profile
+   (time
+    (last
+     (intersections-to-points rays-from-source-to-wall sphere))))
+  (prof/serve-ui 8080)
+  )

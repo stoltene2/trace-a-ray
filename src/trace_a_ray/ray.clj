@@ -79,7 +79,7 @@
   (require '[trace-a-ray.tuple :as tuple] :reload)
   (time (dotimes [_ 100000]
           (let [s   (sphere/make-sphere)
-                p   (tuple/point 0 0 -5)
-                dir (tuple/vector 0 0 1)
+                p   (tuple/point 0 0 0)
+                dir (tuple/vector 1 0 0)
                 r   (ray/make-ray p dir)]
             (ray/intersect s r)))))
