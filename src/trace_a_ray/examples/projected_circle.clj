@@ -18,13 +18,20 @@
   number."
   (tuple/point 0 0 -1.005))
 
+(defn source-coordinates
+  "Given X and Y then return a lazy sequence of pairs [X Y] from
+  [(-X, X), (-Y, Y)]"
+  [x y]
+  (for [x (range (- x) x)
+        y (range (- y) y)]
+      [x y]))
+
 (def ^:private rays-from-source-to-wall
   "This is the collection of rays from the source point to each point
   on the wall."
   (let [z 10
         source source-point]
-    (for [x (range -250 250) y (range -250 250)]
-      (ray/make-ray source (tuple/vector x y z)))))
+    (map #(ray/make-ray source (tuple/vector (first %) (second %) z)) (source-coordinates 250 250))))
 
 (defn intersections [rays sphere]
   "Create a list of rays which intersect the sphere"
@@ -35,7 +42,11 @@
 ;; updating the vector here could be expensive...
 (defn intersections-to-points [rays sphere]
   "Get the two dimensional points projected onto the plane at z=10"
-  (let [vec-to-point (fn [vec] (assoc vec 3 1.0))] ; instead of
+  (let [vec-to-point (fn [vec] (assoc vec 3 1.0))
+        xf (comp
+            (filter (fn [ray]
+                      (not (empty? (ray/intersect sphere ray)))))
+            (map #(->> % :direction vec-to-point)))] ; instead of
                                                    ; finding
                                                    ; intersections
                                                    ; with plane I'm
@@ -43,11 +54,8 @@
                                                    ; just projecting
                                                    ; the vector to a
                                                    ; point by changing
-                                                   ; the last 0 to 1.
-    (map #(->> % :direction vec-to-point)
-         (filter (fn [ray]
-                   (not (empty? (ray/intersect sphere ray))))
-                 rays))))
+                                        ; the last 0 to 1.
+    (into [] xf rays)))
 
 
 
