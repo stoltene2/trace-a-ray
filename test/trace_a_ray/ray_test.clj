@@ -24,16 +24,16 @@
           dir (tuple/vector 1 0 0)
           r (ray/make-ray p dir)]
 
-      (is (= (ray/position r 0) (tuple/point 2 3 4))
+      (is (tuple= (ray/position r 0) (tuple/point 2 3 4))
           "Time 0")
 
-      (is (= (ray/position r 1) (tuple/point 3 3 4))
+      (is (tuple= (ray/position r 1) (tuple/point 3 3 4))
           "Time 1")
 
-      (is (= (ray/position r -1) (tuple/point 1 3 4))
+      (is (tuple= (ray/position r -1) (tuple/point 1 3 4))
           "Time -1")
 
-      (is (= (ray/position r 2.5) (tuple/point 4.5 3.0 4.0))
+      (is (tuple= (ray/position r 2.5) (tuple/point 4.5 3.0 4.0))
           "Time 2.5"))))
 
 (deftest ray-sphere-intersection

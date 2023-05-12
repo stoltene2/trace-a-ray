@@ -38,5 +38,5 @@
 (defmethod mul :hadamard [[r1 g1 b1] [r2 g2 b2]]
   [(core-* r1 r2) (core-* g1 g2) (core-* b1 b2)])
 
-(defmethod mul :scalar [n c]
-  (t/* n c))
+(defmethod mul :scalar [n [r g b]]
+  [(core-* n r) (core-* n g) (core-* n b)])
