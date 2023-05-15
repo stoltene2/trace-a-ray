@@ -2,7 +2,7 @@
   (:require [trace-a-ray.color :as color]))
 
 ;; I should use a map here where the key is [x y] so that it is sparse
-(defn canvas [x y]
+(defn make-canvas [x y]
   "Creates an empty canvas where all values are black by default"
   (vec (repeat y (vec (repeat x (color/color 0 0 0))))))
 

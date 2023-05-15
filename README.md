@@ -55,27 +55,8 @@ clj -M:cider-clj -J-Djdk.attach.allowAttachSelf
 
 To run tests enter the nix shell with `nix develop` then execute `clj -X:test`
 
-## Profiling with flame charts
 
-You need to launch the repl with the ability to launch the [profiler](https://github.com/clojure-goes-fast/clj-async-profiler).
-
-```clojure
-clj -J-Djdk.attach.allowAttachSelf
-(require '[trace-a-ray.core])
-(require '[clj-async-profiler.core :as prof])
-(prof/profile (trace-a-ray.core/-main))
-(prof/serve-ui 8080)
-```
-
-## Examples
-
-### Sphere projection
-![2d projection](/doc/images/sphere.png)
-
-The 2d projection above is a demonstration that a sphere in 3d
-worldspace and be projected onto a plane.
-
-### Performance
+## Performance
 
 Performance is an ongoing consideration. Step one is to make the
 implementations correct. Step two is to find optimal ways of
@@ -98,6 +79,39 @@ measure again.
                 r   (ray/make-ray p dir)]
             (ray/intersect s r)))))
 ```
+
+### Profiling with flame charts
+
+You need to launch the repl with the ability to launch the [profiler](https://github.com/clojure-goes-fast/clj-async-profiler).
+
+```clojure
+clj -J-Djdk.attach.allowAttachSelf
+(require '[trace-a-ray.core])
+(require '[clj-async-profiler.core :as prof])
+(prof/profile (trace-a-ray.core/-main))
+(prof/serve-ui 8080)
+```
+
+### Warning on reflections
+
+If you want to get warnings when you might need type hints then you
+should `warn-on-reflection`. This will indicate when runtime
+reflection is happening. You can then go add type hints to speed up
+the code.
+
+```clojure
+(set! *warn-on-reflection* true)
+```
+
+
+
+## Examples
+
+### Sphere projection
+![2d projection](/doc/images/sphere.png)
+
+The 2d projection above is a demonstration that a sphere in 3d
+worldspace and be projected onto a plane.
 
 ### Generating examples
 
