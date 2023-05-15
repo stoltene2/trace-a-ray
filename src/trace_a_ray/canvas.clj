@@ -24,10 +24,11 @@
 ;; I can use a transient string or a string builder `with-out-string`
 (defn canvas-to-ppm [c]
   "Convert a canvas to a PPM image string"
-  (let y (count c)
-       max-color-value 255
-       row-to-ppm (fn [r] (apply str (interpose " " (map (comp scale clamp) (flatten r)))))
-       ppm-rows (map row-to-ppm c)
+  (let [x (count (first c))
+        y (count c)
+        max-color-value 255
+        row-to-ppm (fn [r] (apply str (interpose " " (map (comp scale clamp) (flatten r)))))
+        ppm-rows (map row-to-ppm c)]
     (apply str
            (concat (interpose "\n"
                        (concat ["P3"
