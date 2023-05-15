@@ -20,7 +20,7 @@ Execute the following with nix installed and flakes enabled,
 or
 
     $ nix develop
-    $ clojure -M -m trace-a-ray.core
+    $ clojure -M:project/run
 
 ## Options
 

@@ -12,6 +12,8 @@
          :main-opts ["-m" "cognitect.test-runner"]
          :exec-fn cognitect.test-runner.api/test}
 
+  :project/run {:main-opts ["-m" "trace-a-ray.core"]}
+
   :cider-clj {:extra-paths ["test"]
               :extra-deps {org.clojure/clojure {:mvn/version "1.11.1"}
                           cider/cider-nrepl {:mvn/version "0.30.0"}}
