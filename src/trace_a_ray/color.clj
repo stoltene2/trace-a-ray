@@ -20,13 +20,13 @@
   b)
 
 ;; I should create a protocol here
-(defn + [c1 c2]
+(defn + [[r1 g1 b1] [r2 g2 b2]]
   "Add two colors together"
-  (t/+ c1 c2))
+  (color (core-+ r1 r2) (core-+ g1 g2) (core-+ b1 b2)))
 
-(defn - [c1 c2]
+(defn - [[r1 g1 b1] [r2 g2 b2]]
   "Subtract two colors"
-  (t/- c1 c2))
+  (color (core-- r1 r2) (core-- g1 g2) (core-- b1 b2)))
 
 (defmulti mul
   "Either scale a color or perform a Hadamard multiplication (componentwise) if two colors are given."
