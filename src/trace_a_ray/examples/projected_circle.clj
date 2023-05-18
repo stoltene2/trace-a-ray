@@ -5,7 +5,8 @@
             [trace-a-ray.ray :as ray]
             [trace-a-ray.color :as color]
             [trace-a-ray.transformation :as trans]
-            [clojure.core.matrix :as m]))
+            [clojure.core.matrix :as m]
+            [clojure.core.reducers :as r]))
 
 
 (def ^:private sphere
@@ -22,9 +23,9 @@
   "Given X and Y then return a lazy sequence of pairs [X Y] from
   [(-X, X), (-Y, Y)]"
   [x y]
-  (for [x (range (- x) x)
-        y (range (- y) y)]
-      [x y]))
+  (into [] (for [x (range (- x) x)
+             y (range (- y) y)]
+         [x y])))
 
 (def ^:private rays-from-source-to-wall
   "This is the collection of rays from the source point to each point
@@ -56,6 +57,26 @@
                                                    ; point by changing
                                         ; the last 0 to 1.
     (into [] xf rays)))
+
+
+(defn intersections-to-points-reducer [sphere]
+  "Get the two dimensional points projected onto the plane at z=10.
+
+This function relies on Clojure's parallel reducers. It requires the
+the source, coords, is reducible. It starts with a pair of
+coordinates, constructs rays, filters for intersections, converts to
+point and collects the results into a vector."
+  (let [vec-to-point (fn [vec] (assoc vec 3 1.0))
+        source source-point
+        z 10
+        coords (source-coordinates 250 250)]
+    (->> coords
+         (r/map #(ray/make-ray source (tuple/vector (first %) (second %) z)))
+         (r/filter #(not (empty? (ray/intersect sphere %))))
+         (r/map #(->> % :direction vec-to-point))
+         (r/foldcat)
+         (into []))
+    ))
 
 
 
@@ -112,7 +133,7 @@ The coordinates will be rounded to integer values."
 
 (defn intersections-to-ppm []
   "This is the main entry point here"
-  (make-ppm (translate-points-to-center 500 500 (intersections-to-points rays-from-source-to-wall sphere))))
+  (make-ppm (translate-points-to-center 500 500 (intersections-to-points-reducer sphere))))
 
 
 
