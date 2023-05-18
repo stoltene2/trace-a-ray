@@ -1,6 +1,11 @@
 (ns trace-a-ray.ray
   (:require [clojure.core.matrix :as m]
-            [trace-a-ray.tuple :as t]))
+            [trace-a-ray.tuple :as t]
+            [trace-a-ray.sphere])
+
+  ;; Since this is a java class you need to lowercase the dashes
+  ;; https://danielcompton.net/requiring-records-clojure-clojurescript
+  (:import [trace_a_ray.sphere Sphere]))
 
 (defrecord Ray [point direction])
 
@@ -8,25 +13,26 @@
   "Create a ray record with its origin point and direction"
   (->Ray point direction))
 
-(defn position [ray time]
+(defn position [^Ray ray time]
   "Determine the position of the ray at time t"
 
   (t/+ (.point ray) (t/* time (.direction ray))))
 
 
-(defn transform [ray transform]
+(defn transform [^Ray ray transform]
   "Transform a ray using transform to convert a ray to object space
   and back."
   (let [p (m/mmul transform (.point ray))
         dir (m/mmul transform (.direction ray))]
     (make-ray p dir)))
 
-(defn intersect [sphere ray]
+;; Not sure how to typehint sphere here
+(defn intersect [^Sphere sphere ^Ray ray]
   "Given a sphere and a ray, determine if there are any
   intersections between the two."
 
   (let [;; ray transformed to be relative to the sphere
-        obj-ray (transform ray (.inverse-transform sphere))
+        obj-ray ^Ray (transform ray (.inverse-transform sphere))
         ray-dir (.direction obj-ray)
         sphere->ray-v (t/- (.point obj-ray) t/world-origin)
 
