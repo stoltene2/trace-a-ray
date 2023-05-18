@@ -71,7 +71,7 @@ The coordinates will be rounded to integer values."
 (defn make-ppm [ps]
   (let [max-x 100
         max-y 100
-        canvas (canvas/canvas max-x max-y)
+        canvas (canvas/make-canvas max-x max-y)
 
         points (filter (fn [[x y]] (and (in-interval x 0 (dec max-x))
                                         (in-interval y 0 (dec max-y)))) (map (partial point-to-pixel max-x max-y) ps))
