@@ -42,7 +42,7 @@ The environment has an effect from gravity and wind."
 (defn make-ppm []
   (let [max-x 200
         max-y 200
-        canvas (canvas/canvas max-x max-y)
+        canvas (canvas/make-canvas max-x max-y)
         point-to-pixel (fn [x]
                          [(Math/round (float (first x)))
                           (Math/round (float (- (dec max-y) (second x))))])
