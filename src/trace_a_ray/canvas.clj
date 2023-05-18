@@ -1,5 +1,6 @@
 (ns trace-a-ray.canvas
-  (:require [trace-a-ray.color :as color]))
+  (:require [trace-a-ray.color :as color]
+            [clojure.string :as str]))
 
 ;; I should use a map here where the key is [x y] so that it is sparse
 (defn make-canvas [x y]
@@ -20,17 +21,23 @@
 (defn- scale [x] (Math/round (float (* x 255))))
 
 
-;; canvas->ppm could exist in a new module called `trace-a-ray.ppm`
-;; I can use a transient string or a string builder `with-out-string`
-(defn canvas-to-ppm [c]
-  "Convert a canvas to a PPM image string"
-  (let [x (count (first c))
-        y (count c)
+(defn canvas-to-ppm
+  "Convert a canvas to a PPM image string. Initially, I was creating
+  this string using `(apply str ...)`, which uses a StringBuilder, but
+  it just isn't as clean or easy to read. The approach below captures
+  println output ad puts them in a string."
+
+  [canvas]
+
+  (let [x               (count (first canvas))
+        y               (count canvas)
         max-color-value 255
-        row-to-ppm (fn [r] (apply str (interpose " " (map (comp scale clamp) (flatten r)))))
-        ppm-rows (map row-to-ppm c)]
-    (apply str
-           (concat (interpose "\n"
-                       (concat ["P3"
-                                (str x " " y)
-                                max-color-value] ppm-rows)) ["\n"]))))
+        clamp-and-scale (comp scale clamp)
+        header   (fn [] (printf "P3\n%s %s\n%s\n" x y max-color-value))
+        row->ppm (fn [r] (println (str/join " " (->> r flatten (map clamp-and-scale)))))
+        ppm-rows (fn [] (doseq [row canvas]
+                          (row->ppm row)))]
+
+    (with-out-str (do
+                    (header)
+                    (ppm-rows)))))

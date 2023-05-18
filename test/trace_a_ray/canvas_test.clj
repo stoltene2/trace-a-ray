@@ -1,7 +1,8 @@
 (ns trace-a-ray.canvas-test
   (:require [clojure.test :refer :all]
             [trace-a-ray.color :as color]
-            [trace-a-ray.canvas :as canvas]))
+            [trace-a-ray.canvas :as canvas]
+            [clojure.string :as str]))
 
 (defn all-blank [c]
   "Determines that every component is mapped to 0."
@@ -19,19 +20,20 @@
 
 (deftest canvas-to-ppm
   (testing "Convert a canvas to ppm"
-    (let [c1 (color/color 1 0 0)
-          c2 (color/color 0 0.5 0)
-          c3 (color/color -0.5 0 1)
+    (let [c1  (color/color 1 0 0)
+          c2  (color/color 0 0.5 0)
+          c3  (color/color -0.5 0 1)
           can (->>
                (canvas/make-canvas 5 3)
                (canvas/write-pixel 0 0 c1)
                (canvas/write-pixel 2 1 c2)
                (canvas/write-pixel 4 2 c3))]
-      (is (= (str
-              "P3\n"
-              "5 3\n"
-              "255\n"
-              "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n"
-              "0 0 0 0 0 0 0 128 0 0 0 0 0 0 0\n"
-              "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255\n")
+      (is (= (str/join "\n"
+              ["P3"
+              "5 3"
+              "255"
+              "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0"
+              "0 0 0 0 0 0 0 128 0 0 0 0 0 0 0"
+               "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255"
+               ""])
              (canvas/canvas-to-ppm can))))))
