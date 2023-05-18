@@ -39,10 +39,10 @@ To connect to nRepl you need to log into the nix develop shell and launch the se
 
 ```shell
 nix develop
-clj -M:cider-clj
+clj -M:repl
 
 # Or with profiling support
-clj -M:cider-clj -J-Djdk.attach.allowAttachSelf
+clj -M:repl -J-Djdk.attach.allowAttachSelf
 ```
 
 ### Updating Maven dependencies
