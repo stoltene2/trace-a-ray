@@ -4,8 +4,7 @@
 
 (defn -main
   "I print out a projected circle"
-  [& args]
-  (do
-    (println "Generating /tmp/sphere.ppm")
-    (dotimes [_ 5]
-      (time (spit "/tmp/sphere.ppm" (example/intersections-to-ppm))))))
+  [& _args]
+  (println "Generating /tmp/sphere.ppm")
+  (dotimes [_ 5]
+    (time (spit "/tmp/sphere.ppm" (example/intersections-to-ppm)))))

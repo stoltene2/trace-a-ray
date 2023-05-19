@@ -1,10 +1,10 @@
 (ns trace-a-ray.sphere-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [trace-a-ray.transformation :as trans]
             [trace-a-ray.sphere :as sphere]
             [trace-a-ray.ray :as r]
             [trace-a-ray.tuple :as t]
-            [trace-a-ray.helpers :refer :all]))
+            [trace-a-ray.helpers :refer [tuple= matrix=]]))
 
 
 (deftest sphere-transformations

@@ -3,8 +3,9 @@
             [clojure.string :as str]))
 
 ;; I should use a map here where the key is [x y] so that it is sparse
-(defn make-canvas [x y]
+(defn make-canvas
   "Creates an empty canvas where all values are black by default"
+  [x y]
   (vec (repeat y (vec (repeat x (color/color 0 0 0))))))
 
 ;; Not sure this is used
@@ -12,14 +13,14 @@
   (nth (nth c y) x))
 
 ;; This doesn't need to be public
-(defn write-pixel [x y color canv]
+(defn write-pixel
   "Create a new canvas where coordinate (x, y) is set to color."
-  ;; (assoc map key val)
+  [x y color canv]
+
   (assoc-in canv [y x] color))
 
 (defn- clamp [x] (if (< x 0.0) 0.0 (if (> x 1.0) 1.0 x)))
 (defn- scale [x] (Math/round (float (* x 255))))
-
 
 (defn canvas-to-ppm
   "Convert a canvas to a PPM image string. Initially, I was creating
@@ -33,10 +34,10 @@
         y               (count canvas)
         max-color-value 255
         clamp-and-scale (comp scale clamp)
-        header   (fn [] (printf "P3\n%s %s\n%s\n" x y max-color-value))
-        row->ppm (fn [r] (println (str/join " " (->> r flatten (map clamp-and-scale)))))
-        ppm-rows (fn [] (doseq [row canvas]
-                          (row->ppm row)))]
+        header          (fn [] (println (apply str "P3\n" (str x) " " (str y) "\n" (str max-color-value))))
+        row->ppm        (fn [r] (println (str/join " " (->> r flatten (map clamp-and-scale)))))
+        ppm-rows        (fn [] (doseq [row canvas]
+                                 (row->ppm row)))]
 
     (with-out-str (do
                     (header)

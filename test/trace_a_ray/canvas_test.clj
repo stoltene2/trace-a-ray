@@ -1,11 +1,12 @@
 (ns trace-a-ray.canvas-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [trace-a-ray.color :as color]
             [trace-a-ray.canvas :as canvas]
             [clojure.string :as str]))
 
-(defn all-blank [c]
+(defn all-blank
   "Determines that every component is mapped to 0."
+  [c]
   (every? #(= 0.0 %) (flatten c)))
 
 (deftest saving-a-convas
@@ -29,11 +30,11 @@
                (canvas/write-pixel 2 1 c2)
                (canvas/write-pixel 4 2 c3))]
       (is (= (str/join "\n"
-              ["P3"
-              "5 3"
-              "255"
-              "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0"
-              "0 0 0 0 0 0 0 128 0 0 0 0 0 0 0"
-               "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255"
-               ""])
+                       ["P3"
+                        "5 3"
+                        "255"
+                        "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0"
+                        "0 0 0 0 0 0 0 128 0 0 0 0 0 0 0"
+                        "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255"
+                        ""])
              (canvas/canvas-to-ppm can))))))

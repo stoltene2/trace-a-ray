@@ -8,7 +8,6 @@
             [clojure.core.matrix :as m]
             [clojure.core.reducers :as r]))
 
-
 (def ^:private sphere
   "Create the unit sphere in the scene."
   (sphere/make-sphere))
@@ -24,9 +23,10 @@
   [(-X, X), (-Y, Y)]"
   [x y]
   (into [] (for [x (range (- x) x)
-             y (range (- y) y)]
-         [x y])))
+                 y (range (- y) y)]
+             [x y])))
 
+#_{:clj-kondo/ignore [:unused-private-var]}
 (def ^:private rays-from-source-to-wall
   "This is the collection of rays from the source point to each point
   on the wall."
@@ -34,57 +34,32 @@
         source source-point]
     (map #(ray/make-ray source (tuple/vector (first %) (second %) z)) (source-coordinates 250 250))))
 
-(defn intersections [rays sphere]
-  "Create a list of rays which intersect the sphere"
-  (filter (fn [ray] (not (empty? (ray/intersect sphere ray)))) rays))
-
-
-;; I think that filtering and mapping could be consolidated to one reduce.
-;; updating the vector here could be expensive...
-(defn intersections-to-points [rays sphere]
-  "Get the two dimensional points projected onto the plane at z=10"
-  (let [vec-to-point (fn [vec] (assoc vec 3 1.0))
-        xf (comp
-            (filter (fn [ray]
-                      (not (empty? (ray/intersect sphere ray)))))
-            (map #(->> % :direction vec-to-point)))] ; instead of
-                                                   ; finding
-                                                   ; intersections
-                                                   ; with plane I'm
-                                                   ; cheating here and
-                                                   ; just projecting
-                                                   ; the vector to a
-                                                   ; point by changing
-                                        ; the last 0 to 1.
-    (into [] xf rays)))
-
-
-(defn intersections-to-points-reducer [sphere]
+(defn intersections-to-points-reducer
   "Get the two dimensional points projected onto the plane at z=10.
 
 This function relies on Clojure's parallel reducers. It requires the
 the source, coords, is reducible. It starts with a pair of
 coordinates, constructs rays, filters for intersections, converts to
 point and collects the results into a vector."
+  [sphere]
   (let [vec-to-point (fn [vec] (assoc vec 3 1.0))
         source source-point
         z 10
         coords (source-coordinates 250 250)]
     (->> coords
          (r/map #(ray/make-ray source (tuple/vector (first %) (second %) z)))
-         (r/filter #(not (empty? (ray/intersect sphere %))))
+         (r/filter #(seq (ray/intersect sphere %)))
          (r/map #(->> % :direction vec-to-point))
          (r/foldcat)
-         (into []))
-    ))
-
-
+         (into []))))
 
 ;;;============================== Copied again
-(defn translate-points-to-center [x y points]
+(defn translate-points-to-center
   "Given dimensions x and y of the resulting image translate points
   from origin to image center.
   POINTS are a c"
+
+  [x y points]
   (let [find-midpoint (fn [a] (if (even? a)
                                 (/ a 2)
                                 (/ (dec a) 2)))
@@ -92,22 +67,22 @@ point and collects the results into a vector."
         center-y (find-midpoint y)]
     (m/transpose (m/mmul (trans/translate center-x center-y 0) (m/transpose points)))))
 
-
-(defn in-interval [n lower upper]
+(defn in-interval
   "Returns true if lower <= n <= upper"
+  [n lower upper]
   (and (>= n lower) (<= n upper)))
 
-(defn point-to-pixel [max-x max-y pt]
+(defn point-to-pixel
   "Take an n-dimensional point and plot the x and y components in a rectangle bounded by
     0 <= pt_x < max-x and
     0 <= pt_y < max-y
 
 The coordinates will be rounded to integer values."
-
+  [_max-x max-y pt]
   (let [x (float (first pt))
         y (float (second pt))]
 
-       [(Math/round x) (Math/round (- (dec max-y) y))]))
+    [(Math/round x) (Math/round (- (dec max-y) y))]))
 
 (defn make-ppm [ps]
   (let [max-x  500
@@ -127,25 +102,21 @@ The coordinates will be rounded to integer values."
                (rest points)
                ((comp first rest) points))))))
 
-
-
 ;;;============================== Copied again
 
-(defn intersections-to-ppm []
+(defn intersections-to-ppm
   "This is the main entry point here"
+  []
   (make-ppm (translate-points-to-center 500 500 (intersections-to-points-reducer sphere))))
-
-
 
 ;; Write file with
 (comment
   (spit "/tmp/sphere.ppm" (intersections-to-ppm)))
 
-
 (comment
   ;; Profiling
   (require '[clj-async-profiler.core :as prof])
 
-  (prof/profile (user/timeit (intersections-to-ppm)))
-  (prof/serve-ui 8080)
-  )
+  (prof/profile #_{:clj-kondo/ignore [:unresolved-namespace]}
+   (user/timeit (intersections-to-ppm)))
+  (prof/serve-ui 8080))

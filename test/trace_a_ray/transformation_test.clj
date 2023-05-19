@@ -1,7 +1,7 @@
 (ns trace-a-ray.transformation-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [clojure.core.matrix :as m]
-            [trace-a-ray.helpers :refer :all]
+            [trace-a-ray.helpers :refer [tuple=]]
             [trace-a-ray.transformation :as transform]
             [trace-a-ray.tuple :as tuple]))
 

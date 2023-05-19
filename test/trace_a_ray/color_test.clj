@@ -1,7 +1,7 @@
 (ns trace-a-ray.color-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [trace-a-ray.color :as c]
-            [trace-a-ray.helpers :refer :all]))
+            [trace-a-ray.helpers :refer [tuple=]]))
 
 (deftest color-components
   (testing "When getting the components of a color"

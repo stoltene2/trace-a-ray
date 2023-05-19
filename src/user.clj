@@ -1,5 +1,6 @@
 (ns user)
 
+#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defmacro timeit
   "Like the standard time macro but it returns nil instead of what is
   evaluated. This is useful if you want to gather rough timing of a

@@ -1,8 +1,8 @@
 
 (ns trace-a-ray.tuple-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [trace-a-ray.tuple :as t]
-            [trace-a-ray.helpers :refer :all]))
+            [trace-a-ray.helpers :refer [tuple=]]))
 
 (deftest tuple-as-point
   (testing "When tuple is a point"

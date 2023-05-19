@@ -3,8 +3,8 @@
             [trace-a-ray.tuple :as tuple]
             [trace-a-ray.sphere :as sphere]
             [trace-a-ray.transformation :as trans]
-            [trace-a-ray.helpers :refer :all]
-            [clojure.test :refer :all]))
+            [trace-a-ray.helpers :refer [tuple=]]
+            [clojure.test :refer [deftest testing is]]))
 
 (deftest creating-a-ray
   (testing "Construction of rays"
@@ -72,7 +72,6 @@
           r   (ray/make-ray p dir)]
       (is (= [-6.0 -4.0] (ray/intersect s r))))))
 
-
 (deftest determining-hits-and-intersections-in-the-world
   (testing "When all intersections have positive time values."
     (let [s      (sphere/make-sphere)
@@ -113,7 +112,6 @@
                       (ray/intersection 2 s))
           inters (ray/intersections s world)]
       (is (= 2 (ray/hit inters))))))
-
 
 (deftest translating-a-ray
   (testing "Translating a ray to object space."

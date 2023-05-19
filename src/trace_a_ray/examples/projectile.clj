@@ -3,26 +3,22 @@
             [trace-a-ray.canvas :as canvas]
             [trace-a-ray.color :as color]))
 
-
-(defn projectile [position velocity]
-  "Represent a projectile.
-POSITION is a point and VELOCITY is a vector."
-  [position velocity])
-
-(defn y-pos [[point _]]
+(defn y-pos
   "Extract y coordinate from the point part of the projectile"
+  [[point _]]
   (t/y point))
 
-(defn tick [env [proj-pos proj-vel :as projectile]]
+(defn tick [env [proj-pos proj-vel]]
   (let [position (t/+ proj-pos proj-vel)
         velocity (t/+ (t/+ proj-vel (:gravity env))
                       (:wind env))]
     [position velocity]))
 
-
-(defn run-it []
+(defn run-it
   "Execute tick repeatedly until projectile hits the ground (-y value).
 The environment has an effect from gravity and wind."
+
+  []
   (let [env    {:gravity (t/vector 0 -0.01 0) :wind (t/vector -0.004, 0, 0)}
         arbitrary-scale 2.1
         starting-point (t/point 0 0 0)
@@ -35,11 +31,16 @@ The environment has an effect from gravity and wind."
         [tick-count (first p) points]
         (recur (inc tick-count) (tick env p) (conj points (first p)))))))
 
-(defn in-interval [n lower upper]
+(defn in-interval
   "Returns true if lower <= n <= upper"
+  [n lower upper]
   (and (>= n lower) (<= n upper)))
 
-(defn make-ppm []
+#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
+(defn make-ppm
+
+  "This is the magic that makes it go"
+  []
   (let [max-x 200
         max-y 200
         canvas (canvas/make-canvas max-x max-y)
