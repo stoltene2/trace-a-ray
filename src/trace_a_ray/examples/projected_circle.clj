@@ -145,11 +145,7 @@ The coordinates will be rounded to integer values."
 (comment
   ;; Profiling
   (require '[clj-async-profiler.core :as prof])
-  (def points (intersections-to-points rays-from-source-to-wall sphere))
-  (prof/profile (time
-                 (do
-                   (translate-points-to-center 500 500
-                                               (intersections-to-points rays-from-source-to-wall sphere))
-                   [])))
+
+  (prof/profile (user/timeit (intersections-to-ppm)))
   (prof/serve-ui 8080)
   )
