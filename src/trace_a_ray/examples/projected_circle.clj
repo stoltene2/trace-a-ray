@@ -35,17 +35,18 @@
     (map #(ray/make-ray source (tuple/vector (first %) (second %) z)) (source-coordinates 250 250))))
 
 (defn intersections-to-points-reducer
-  "Get the two dimensional points projected onto the plane at z=10.
+  "Get the two dimensional points projected onto the plane at z=10. It
+  takes max-x and max-y as dimensions for the image.
 
-This function relies on Clojure's parallel reducers. It requires the
-the source, coords, is reducible. It starts with a pair of
-coordinates, constructs rays, filters for intersections, converts to
-point and collects the results into a vector."
-  [sphere]
+  This function relies on Clojure's parallel reducers. It requires the
+  source, coords, to be reducible. It starts with a pair of coordinates,
+  constructs rays, filters for intersections, converts to point and
+  collects the results into a vector."
+  [max-x max-y sphere]
   (let [vec-to-point (fn [vec] (assoc vec 3 1.0))
         source source-point
         z 10
-        coords (source-coordinates 250 250)]
+        coords (source-coordinates (Math/floor (/ max-x 2)) (Math/floor (/ max-y 2)))]
     (->> coords
          (r/map #(ray/make-ray source (tuple/vector (first %) (second %) z)))
          (r/filter #(seq (ray/intersect sphere %)))
@@ -55,6 +56,9 @@ point and collects the results into a vector."
 
 ;;;============================== Copied again
 (defn translate-points-to-center
+  ;; This function is really slow. I need to use a faster library go move on past it
+  ;;   (user/timeit (m/transpose (intersections-to-points-reducer 500 500 sphere)) )
+  ;; "Elapsed time: 543.301216 msecs"
   "Given dimensions x and y of the resulting image translate points
   from origin to image center.
   POINTS are a c"
@@ -84,10 +88,8 @@ The coordinates will be rounded to integer values."
 
     [(Math/round x) (Math/round (- (dec max-y) y))]))
 
-(defn make-ppm [ps]
-  (let [max-x  500
-        max-y  500
-        canvas (canvas/make-canvas max-x max-y)
+(defn make-ppm [max-x max-y ps]
+  (let [canvas (canvas/make-canvas max-x max-y)
 
         points (->> ps (map #(point-to-pixel max-x max-y %))
                     (filter (fn [[x y]] (and (in-interval x 0 (dec max-x))
@@ -107,7 +109,25 @@ The coordinates will be rounded to integer values."
 (defn intersections-to-ppm
   "This is the main entry point here"
   []
-  (make-ppm (translate-points-to-center 500 500 (intersections-to-points-reducer sphere))))
+  (let [x 500
+        y 500]
+    (make-ppm x y (translate-points-to-center x y (intersections-to-points-reducer x y sphere)))))
+
+(comment
+  (def point-cache (future
+                     (let [points     (translate-points-to-center 500 500 (intersections-to-points-reducer 500 500 sphere))
+                           in-region? (fn [[x y]] (and (in-interval x 0 (dec 500))
+                                                       (in-interval y 0 (dec 500))))]
+                       (->> points
+                            (map #(point-to-pixel 500 500 %))
+                            (filter in-region?)))))
+
+  (defn intersections-to-ppm-go-fast
+    "This is the main entry point here"
+    []
+    (let [x 500
+          y 500]
+      (make-ppm x y @point-cache))))
 
 ;; Write file with
 (comment
