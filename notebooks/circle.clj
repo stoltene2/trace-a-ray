@@ -1,20 +1,24 @@
-;; WARNING!
-;; This file is the original copy of `circle`. My intention
-;; is to move these examples into notebooks. Edit that file
-;; instead. This is kept for posterity until the tests can be moved
-;; out.
+^{:nextjournal.clerk/visibility {:code :hide}}
+(ns circle
+  (:require
+   [nextjournal.clerk :as clerk]
+   [trace-a-ray.sphere :as sphere]
+   [trace-a-ray.tuple :as tuple]
+   [trace-a-ray.canvas :as canvas]
+   [trace-a-ray.ray :as ray]
+   [trace-a-ray.color :as color]
+   [trace-a-ray.transformation :as trans]
+   [clojure.core.matrix :as m]
+   [clojure.core.reducers :as r]
+   [clojure.java [io :as io]]
+   [clojure.java.shell :as shell])
+  (:import (javax.imageio ImageIO)
+           (java.net URL)
+           (java.io File)))
 
+;; # Getting started with a projected sphere
 
-(ns trace-a-ray.examples.projected-circle
-  (:require [trace-a-ray.sphere :as sphere]
-            [trace-a-ray.tuple :as tuple]
-            [trace-a-ray.canvas :as canvas]
-            [trace-a-ray.ray :as ray]
-            [trace-a-ray.color :as color]
-            [trace-a-ray.transformation :as trans]
-            [clojure.core.matrix :as m]
-            [clojure.core.reducers :as r]))
-
+^{:nextjournal.clerk/visibility {:code :show :result :show}}
 (def ^:private sphere
   "Create the unit sphere in the scene."
   (sphere/make-sphere))
@@ -25,6 +29,7 @@
   number."
   (tuple/point 0 0 -1.005))
 
+^{:nextjournal.clerk/visibility {:result :hide}}
 (defn source-coordinates
   "Given X and Y then return a lazy sequence of pairs [X Y] from
   [(-X, X), (-Y, Y)]"
@@ -34,6 +39,7 @@
              [x y])))
 
 #_{:clj-kondo/ignore [:unused-private-var]}
+^{:nextjournal.clerk/visibility {:result :hide}}
 (def ^:private rays-from-source-to-wall
   "This is the collection of rays from the source point to each point
   on the wall."
@@ -88,7 +94,7 @@
     0 <= pt_x < max-x and
     0 <= pt_y < max-y
 
-The coordinates will be rounded to integer values."
+  The coordinates will be rounded to integer values."
   [_max-x max-y pt]
   (let [x (float (first pt))
         y (float (second pt))]
@@ -120,31 +126,9 @@ The coordinates will be rounded to integer values."
         y 500]
     (make-ppm x y (translate-points-to-center x y (intersections-to-points-reducer x y sphere)))))
 
-(comment
-  (def point-cache (future
-                     (let [points     (translate-points-to-center 500 500 (intersections-to-points-reducer 500 500 sphere))
-                           in-region? (fn [[x y]] (and (in-interval x 0 (dec 500))
-                                                       (in-interval y 0 (dec 500))))]
-                       (->> points
-                            (map #(point-to-pixel 500 500 %))
-                            (filter in-region?)))))
-
-  #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
-  (defn intersections-to-ppm-go-fast
-    "This is the main entry point here"
-    []
-    (let [x 500
-          y 500]
-      (make-ppm x y @point-cache))))
-
-;; Write file with
-(comment
-  (spit "/tmp/sphere.ppm" (intersections-to-ppm)))
-
-(comment
-  ;; Profiling
-  (require '[clj-async-profiler.core :as prof])
-
-  (prof/profile #_{:clj-kondo/ignore [:unresolved-namespace]}
-   (user/timeit (intersections-to-ppm)))
-  (prof/serve-ui 8080))
+(let [file (File/createTempFile "trace-a-ray" "sphere.ppm")
+      path (.getPath file)
+      new-path (str path ".png")]
+  (spit (.getPath file) (intersections-to-ppm))
+  (shell/sh "convert" path new-path)
+  (ImageIO/read (io/input-stream new-path)))

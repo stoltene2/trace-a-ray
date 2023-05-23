@@ -55,6 +55,18 @@ clj -M:repl -J-Djdk.attach.allowAttachSelf
 
 To run tests enter the nix shell with `nix develop` then execute `clj -X:test`
 
+## Clerk notebook development
+
+When you start a repl there is a command in `user.clj` which will
+start the clerk server listening for changes. When initiated you'll
+get a server session that runs at <http://localhost:7777/.> Next,
+you'll need to start call `(clerk/show! :circle)`, for example. Check
+out the [Clerk book](https://book.clerk.vision/#book-of-clerk). The
+[source
+code](https://github.com/nextjournal/book-of-clerk/blob/main/book.clj)
+for the book has a lot of good references.
+
+Conveniently, markdown is used in comments.
 
 ## Performance
 
