@@ -12,8 +12,11 @@
             [trace-a-ray.ray :as ray]
             [trace-a-ray.color :as color]
             [trace-a-ray.transformation :as trans]
+            [trace-a-ray.image :as image]
             [clojure.core.matrix :as m]
-            [clojure.core.reducers :as r]))
+            [clojure.core.reducers :as r])
+  (:import javax.imageio.ImageIO
+           java.io.File))
 
 (def ^:private sphere
   "Create the unit sphere in the scene."
@@ -95,30 +98,31 @@ The coordinates will be rounded to integer values."
 
     [(Math/round x) (Math/round (- (dec max-y) y))]))
 
-(defn make-ppm [max-x max-y ps]
+(defn make-image [max-x max-y ps]
   (let [canvas (canvas/make-canvas max-x max-y)
 
         points (->> ps (map #(point-to-pixel max-x max-y %))
                     (filter (fn [[x y]] (and (in-interval x 0 (dec max-x))
                                              (in-interval y 0 (dec max-y))))))
-        white  (color/color 255 255 255)]
+        green  (color/color 0 255 0)]
     (loop [canvas canvas
            points points
            p      (first points)]
       (if (empty? points)
-        (canvas/canvas-to-ppm canvas)
-        (recur (canvas/write-pixel (first p) (second p) white canvas)
+        (image/make-buffered-image canvas)
+        (recur (canvas/write-pixel (first p) (second p) green canvas)
                (rest points)
                ((comp first rest) points))))))
 
 ;;;============================== Copied again
 
-(defn intersections-to-ppm
-  "This is the main entry point here"
+(defn intersections-to-image
+  "This is the main entry point for this example"
   []
   (let [x 500
-        y 500]
-    (make-ppm x y (translate-points-to-center x y (intersections-to-points-reducer x y sphere)))))
+        y 500
+        buffered-image (make-image x y (translate-points-to-center x y (intersections-to-points-reducer x y sphere)))]
+    (ImageIO/write buffered-image "png" (File. "/tmp/sphere.png"))))
 
 (comment
   (def point-cache (future
@@ -130,21 +134,21 @@ The coordinates will be rounded to integer values."
                             (filter in-region?)))))
 
   #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
-  (defn intersections-to-ppm-go-fast
+  (defn intersections-to-image-go-fast
     "This is the main entry point here"
     []
     (let [x 500
           y 500]
-      (make-ppm x y @point-cache))))
+      (make-image x y @point-cache))))
 
 ;; Write file with
 (comment
-  (spit "/tmp/sphere.ppm" (intersections-to-ppm)))
+  (ImageIO/write (intersections-to-image) "png" (java.io.File. "/tmp/sphere.png")))
 
 (comment
   ;; Profiling
   (require '[clj-async-profiler.core :as prof])
 
   (prof/profile #_{:clj-kondo/ignore [:unresolved-namespace]}
-   (user/timeit (intersections-to-ppm)))
+   (user/timeit (intersections-to-image)))
   (prof/serve-ui 8080))

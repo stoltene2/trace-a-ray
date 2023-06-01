@@ -8,6 +8,7 @@
    [trace-a-ray.ray :as ray]
    [trace-a-ray.color :as color]
    [trace-a-ray.transformation :as trans]
+   [trace-a-ray.image :as image]
    [clojure.core.matrix :as m]
    [clojure.core.reducers :as r]
    [clojure.java [io :as io]]
@@ -101,34 +102,38 @@
 
     [(Math/round x) (Math/round (- (dec max-y) y))]))
 
-(defn make-ppm [max-x max-y ps]
+(defn make-image [max-x max-y ps]
   (let [canvas (canvas/make-canvas max-x max-y)
 
         points (->> ps (map #(point-to-pixel max-x max-y %))
                     (filter (fn [[x y]] (and (in-interval x 0 (dec max-x))
                                              (in-interval y 0 (dec max-y))))))
-        white  (color/color 255 255 255)]
+        green  (color/color 0 255 0)]
     (loop [canvas canvas
            points points
            p      (first points)]
       (if (empty? points)
-        (canvas/canvas-to-ppm canvas)
-        (recur (canvas/write-pixel (first p) (second p) white canvas)
+        (image/make-buffered-image canvas)
+        (recur (canvas/write-pixel (first p) (second p) green canvas)
                (rest points)
                ((comp first rest) points))))))
 
-;;;============================== Copied again
-
-(defn intersections-to-ppm
+(defn intersections-to-image
   "This is the main entry point here"
   []
-  (let [x 500
-        y 500]
-    (make-ppm x y (translate-points-to-center x y (intersections-to-points-reducer x y sphere)))))
+  (let [x 300
+        y 300]
+    (->> (intersections-to-points-reducer x y sphere)
+         (translate-points-to-center x y)
+         (make-image x y))))
 
-(let [file (File/createTempFile "trace-a-ray" "sphere.ppm")
-      path (.getPath file)
-      new-path (str path ".png")]
-  (spit (.getPath file) (intersections-to-ppm))
-  (shell/sh "convert" path new-path)
-  (ImageIO/read (io/input-stream new-path)))
+(intersections-to-image)
+
+^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
+(comment
+  (let [file (File/createTempFile "trace-a-ray" "sphere.ppm")
+        path (.getPath file)
+        new-path (str path ".png")]
+    (spit (.getPath file) (intersections-to-ppm))
+    (shell/sh "convert" path new-path)
+    (ImageIO/read (io/input-stream new-path))))

@@ -3,7 +3,9 @@
             [trace-a-ray.tuple :as tuple]
             [clojure.core.matrix :as m]
             [trace-a-ray.canvas :as canvas]
-            [trace-a-ray.color :as color]))
+            [trace-a-ray.color :as color]
+            [trace-a-ray.image :as image])
+  (:import javax.imageio.ImageIO))
 
 (def ^:private twelve-o-clock
   "The top-most point on a clock. Positioned 30 units above the origin."
@@ -84,7 +86,7 @@ The coordinates will be rounded to integer values."
            points points
            p (first points)]
       (if (empty? points)
-        (canvas/canvas-to-ppm canvas)
+        (ImageIO/write (image/make-buffered-image canvas) "png" "/tmp/clock.png")
         (recur (canvas/write-pixel (first p) (second p) white canvas)
                (rest points)
                ((comp first rest) points))))))

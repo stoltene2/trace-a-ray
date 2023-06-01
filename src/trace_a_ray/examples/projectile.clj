@@ -1,7 +1,9 @@
 (ns trace-a-ray.examples.projectile
   (:require [trace-a-ray.tuple :as t]
             [trace-a-ray.canvas :as canvas]
-            [trace-a-ray.color :as color]))
+            [trace-a-ray.color :as color]
+            [trace-a-ray.image :as image])
+  (:import javax.imageio.ImageIO))
 
 (defn y-pos
   "Extract y coordinate from the point part of the projectile"
@@ -55,7 +57,7 @@ The environment has an effect from gravity and wind."
            points (rest points)
            p (first points)]
       (if (empty? points)
-        (canvas/canvas-to-ppm canvas)
+        (ImageIO/write (image/make-buffered-image canvas) "png" "/tmp/projectile.png")
         (recur (canvas/write-pixel (first p) (second p) red canvas)
                (rest points)
                ((comp first rest) points))))))
