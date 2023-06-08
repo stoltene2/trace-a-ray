@@ -1,0 +1,15 @@
+* Things to do
+** TODO Switch to Neanderthal for matrix operations
+
+[[https://neanderthal.uncomplicate.org/articles/getting_started.html][Neanderthal]] for faster matrix math. The most expensive operation with
+my transformation is the ~transpose~ operation.
+* Resources for performance improvements
+
+Here are a collection of performance related posts in Clojure
+
+- [[https://blog.redplanetlabs.com/2020/09/02/clojure-faster/][General performance improvements]]
+- [[https://clojure.org/reference/java_interop#typehints][Java interop with typehints]]
+- [[https://clojure.org/reference/lazy][Lazy clojure]]
+- [[https://dawranliou.com/blog/better-performance-with-java-arrays-in-clojure/][Better performance with Java arrays in Clojure]]
+- [[https://insideclojure.org/2014/12/15/warn-on-boxed/][Warning on boxed math usage]]
+- [[https://cuddly-octo-palm-tree.com/posts/2022-02-27-opt-clj-7/][Notes on Optimizing Clojure Code: Type Hints]]
